@@ -1,0 +1,261 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Form Elements {% endblock %} 
+
+{% block content %}
+
+    <div class="my-3 my-md-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-8">
+              <form action="" method="post" class="card">
+                {% csrf_token %}
+                    <div class="card-header">
+                        <h3 class="card-title">Create User</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">                   
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                <label class="form-label">Fullname</label>
+                                <!-- <input type="text" class="form-control"  placeholder="User Fullname." name="full_name"> -->
+                                {{form.full_name}}
+                                </div>
+                            </div>
+                            <!-- <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" placeholder="Username" value="username">
+                                </div>
+                            </div> -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                <label class="form-label">Email address</label>
+                                <!-- <input type="email" class="form-control" placeholder="Email" name="'email"> -->
+                                {{form.email}}
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                              <div class="form-group">
+                              <label class="form-label">Phone Number</label>
+                              {{form.phone_number}}
+                              <!-- <input type="phone" class="form-control" placeholder="PhoneNumber" value="+33" name="phone_number"> -->
+                              </div>
+                            </div>
+
+                              <!-- <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="form-label">User Type</label>                           
+                                    <select name="user" id="select-users" class="form-control custom-select">
+                                        <option value="none" selected disabled hidden>Select a user</option>
+                                        <option value="true" name="normal_user">Normal User</option>
+                                        <option value="true" >Advanced User</option>
+                                        <option value="forms.admin" >Admin</option>
+                                        <option value="forms.staff" >Staff</option>
+                                    </select>
+                                </div>
+                            </div> -->
+                            <div class="col-md-6 col-sm-6">
+                            <div class="form-group">
+                              <div class="form-label">User Type</div>
+                              <div class="custom-controls-stacked">
+                                <label class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" class="custom-control-input" name="normal_user" value="true" >
+                                  <span class="custom-control-label">Normal User</span>
+                                </label>
+                                <label class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" class="custom-control-input" name="advanced_user" value="true">
+                                  <span class="custom-control-label">Advanced User</span>
+                                </label>
+                                {% if user.is_admin %}
+                                <label class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" class="custom-control-input" name="admin" value="true">
+                                  <span class="custom-control-label">Admin</span>
+                                </label>
+
+                                <label class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" class="custom-control-input" name="staff" value="true">
+                                  <span class="custom-control-label">Staff</span>
+                                </label>
+                                {% endif %}
+                              </div>
+                            </div>
+                            </div>
+
+                            <!-- <div class="col-md-6 col-sm-6">
+                              <div class="form-group">
+                                <div class="form-label">User Type</div>
+                                  
+                                   {{form.Usertype}}
+                          
+                              </div>
+                              </div> -->
+
+
+
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                <label class="form-label">Password</label>
+                                {{form.password1}}
+                                <!-- <input type="password" class="form-control" placeholder="Password.." name="password1"> -->
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                <label class="form-label"> Confirm Password</label>
+                                <!-- <input type="password" class="form-control" placeholder=" Confirm Password.." name="password2"> -->
+                                {{form.password2}}
+                                </div>
+                            </div>
+            
+
+
+                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <div class="d-flex">                
+                            <button type="submit" class="btn btn-primary ml-auto">Save User</button>
+                        </div>
+                    </div>
+                </form>
+                <script>
+                require(['jquery', 'selectize'], function ($, selectize) {
+                    $(document).ready(function () {
+                        $('#input-tags').selectize({
+                            delimiter: ',',
+                            persist: false,
+                            create: function (input) {
+                                return {
+                                    value: input,
+                                    text: input
+                                }
+                            }
+                        });
+                
+                        $('#select-beast').selectize({});
+                
+                        $('#select-users').selectize({
+                            render: {
+                                option: function (data, escape) {
+                                    return '<div>' +
+                                        '<span class="image"><img src="' + data.image + '" alt=""></span>' +
+                                        '<span class="title">' + escape(data.text) + '</span>' +
+                                        '</div>';
+                                },
+                                item: function (data, escape) {
+                                    return '<div>' +
+                                        '<span class="image"><img src="' + data.image + '" alt=""></span>' +
+                                        escape(data.text) +
+                                        '</div>';
+                                }
+                            }
+                        });
+                
+                        $('#select-countries').selectize({
+                            render: {
+                                option: function (data, escape) {
+                                    return '<div>' +
+                                        '<span class="image"><img src="' + data.image + '" alt=""></span>' +
+                                        '<span class="title">' + escape(data.text) + '</span>' +
+                                        '</div>';
+                                },
+                                item: function (data, escape) {
+                                    return '<div>' +
+                                        '<span class="image"><img src="' + data.image + '" alt=""></span>' +
+                                        escape(data.text) +
+                                        '</div>';
+                                }
+                            }
+                        });
+                    });
+                });
+                </script>
+            </div>
+
+            <div class="col-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Guideline Details</Details></h3>
+                  </div>
+                  <div class="card-body">
+                    
+                    <ul class="list-unstyled list-separated">
+    
+                      <li class="list-separated-item">
+                        <div class="row align-items-center">
+                          <div class="col">
+                            <div>
+                              <a href="javascript:void(0)" class="text-inherit"><b>Users:</b></a> There exists 4 types of users
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+    
+                      <li class="list-separated-item">
+                        <div class="row align-items-center">
+                          <div class="col">
+                            <div>
+                              <a href="javascript:void(0)" class="text-inherit"><b>Normal User :</b></a> Is an App User with limitation access to 2 devices
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+    
+                      <li class="list-separated-item">
+                        <div class="row align-items-center">
+                          <div class="col">
+                            <div>
+                              <a href="javascript:void(0)" class="text-inherit"><b>Advanced User:</b></a> Is an App User with no limitation access 
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+    
+    
+                      <li class="list-separated-item">
+                        <div class="row align-items-center">
+                          <div class="col">
+                            <div>
+                              <a href="javascript:void(0)" class="text-inherit"><b>Staff:</b></a> Has access to the backend but with set roles and permissions
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li class="list-separated-item">
+                        <div class="row align-items-center">
+                          <div class="col">
+                            <div>
+                              <a href="javascript:void(0)" class="text-inherit"><b>Admin:</b></a> Has  Full access and control of the backend
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+    
+    
+                    </ul>
+    
+    
+    
+    
+    
+    
+    
+                  </div>
+                </div>
+                <script>
+                  require(['input-mask']);
+                </script>
+
+              </div>
+
+
+        </div>
+      </div>
+    </div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

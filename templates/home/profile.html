@@ -1,0 +1,211 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page Profile {% endblock %} 
+
+{% block content %}
+
+    <div class="my-3 my-md-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="card card-profile">
+                {% if user.avatar == None %}
+                  <div class="card-header" style="background-image: url(/static/assets/img/avatars/avatar.png);"></div>
+                {% else %}
+                  <img src="user.avatar"/>
+                {% endif %}
+                
+                  <div class="card-body text-center">
+                  <img class="card-profile-img" src="/static/assets/demo/faces/male/16.jpg">
+                  <h3 class="mb-3">
+                    {{ request.user.full_name }}
+                  </h3>
+                  <p class="mb-4">
+                    {{ request.user.email }}
+                  </p>
+          
+                </div>
+              </div>
+
+            </div>
+            <div class="col-lg-8">
+   
+              <form class="card" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                  <h3 class="card-title">Edit Profile</h3>
+                  <div class="row">
+                    
+                    
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="form-label">Avatar</label>
+                          <input type="file" class="form-control" name="photo" id="avatar">
+                        </div>
+                      </div>
+                    
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <!-- 'full_name',
+                        'user_name',
+                        'address',
+                        'country',
+                        'city',
+                        'zip',
+                        'about',
+                        'photo', -->
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control"  placeholder="Full Name" value=" {{form.profile.full_name}}" name="full_name">
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="text" class="form-control" placeholder="Username" value="{{form.user_name}}" name="email">
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Country</label>
+                        <input type="text" class="form-control" placeholder="Country" value="{{form.country}}" name="country">
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-control" placeholder="Home Address" value="" name="address">
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label class="form-label">State</label>
+                        <input type="text" class="form-control" placeholder="State" value="" name="state">
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-control" placeholder="City" value="" name="city">
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <div class="form-group">
+                        <label class="form-label">Postal Code</label>
+                        <input type="number" class="form-control" placeholder="ZIP Code" value="" name="zip">
+                      </div>
+                    </div>
+
+                    <!--Facebook, Website, -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Facebook</label>
+                        <input type="text" class="form-control" placeholder="Facebook" value="" name="facebook">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Website</label>
+                        <input type="text" class="form-control" placeholder="Website" value="" name="website">
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Google-Plus</label>
+                        <input type="text" class="form-control" placeholder="Website" value="" name="website">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Twitter</label>
+                        <input type="text" class="form-control" placeholder="Twitter" value="" name="twitter">
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Instagram</label>
+                        <input type="text" class="form-control" placeholder="Instagram" value="" name="instagram">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Linkedin</label>
+                        <input type="text" class="form-control" placeholder="Linkedin" value="" name="linkedin">
+                      </div>
+                    </div>
+
+                    <!--Behance, Pinterest, -->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Behance</label>
+                        <input type="text" class="form-control" placeholder="Behance" value="" name="behance">
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Pinterest</label>
+                        <input type="text" class="form-control" placeholder="Pinterest" value="" name="pinterest">
+                      </div>
+
+                    </div>
+
+                    <!--Github-->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Github</label>
+                        <input type="text" class="form-control" placeholder="Github" value="" name="github">
+                      </div>
+                    </div>
+                    <!--Vimeo,Flickr, Dribble-->
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Vimeo</label>
+                        <input type="text" class="form-control" placeholder="Vimeo" value="" name="vimeo">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Flickr</label>
+                        <input type="text" class="form-control" placeholder="Flickr" value="" name="flickr">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="form-label">Dribble</label>
+                        <input type="text" class="form-control" placeholder="Dribble" value="" name="dribble">
+                      </div>
+                    </div>
+                    
+
+
+      
+
+             
+
+
+                    <div class="col-md-12">
+                      <div class="form-group mb-0">
+                        <label class="form-label">About Me</label>
+                        <textarea rows="5" class="form-control" placeholder="Here can be your description" value="" name="about"></textarea>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+                <div class="card-footer text-right">
+                  <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

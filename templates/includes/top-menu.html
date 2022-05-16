@@ -1,0 +1,56 @@
+
+            <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
+                <div class="container">
+                  <div class="row align-items-center">
+                    <div class="col-lg-3 ml-auto">
+                      <form class="input-icon my-3 my-lg-0">
+                        <input type="search" class="form-control header-search" placeholder="Search&hellip;" tabindex="1">
+                        <div class="input-icon-addon">
+                          <i class="fe fe-search"></i>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="col-lg order-lg-first">
+                      <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
+                        <li class="nav-item">
+                          <a href="/home" class="nav-link active"><i class="fe fe-home"></i> Home</a>
+                        </li>
+                        {% if request.user.is_staff %}
+                        <li class="nav-item">
+                          <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-users"></i> Employees</a>
+                          <div class="dropdown-menu dropdown-menu-arrow">
+                            <a href="{% url 'users_list' %}" class="dropdown-item ">Employees List</a>
+                            <a href="{% url 'users_add' %}" class="dropdown-item ">Add Employees</a>
+                            
+                          </div>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                          <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-cpu"></i> Devices</a>
+                          <div class="dropdown-menu dropdown-menu-arrow">
+                            <a href="{% url 'device_list' %}" class="dropdown-item ">Device List</a>
+                            {% if request.user.is_admin %}
+                            <a href="{% url 'device_add' %}" class="dropdown-item ">Device Onboarding</a>              
+                            {% endif %}
+                          </div>
+                        </li>
+                        
+                        <li class="nav-item ">
+                          <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-layers"></i> Device Connection</a>
+                          <div class="dropdown-menu dropdown-menu-arrow">
+                            <a href="{% url 'users_device_add' %}" class="dropdown-item "> Connect Device</a>
+                          </div>
+                        </li>
+
+                        <li class="nav-item ">
+                          <a href="{% url 'activity_log' %}" class="nav-link"><i class="fe fe-activity"></i>Activity Log</a>
+                        </li> 
+
+         
+
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+            </div>
+             

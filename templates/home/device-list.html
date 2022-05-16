@@ -1,0 +1,392 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+
+<div class="my-3 my-md-5">
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">
+                Devices List
+            </h1>
+        </div>
+        <div class="row row-cards row-deck">
+            <div class="col-12
+            z">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Devices</h3>
+                        <!--Show msg_error and msg_ok-->
+                        {% if msg_error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ msg_error }}
+                        </div>
+                        {% endif %}
+                        {% if msg_ok %}
+                        <div class="alert alert-success" role="alert">
+                            {{ msg_ok }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table card-table table-vcenter text-nowrap datatable">
+                            <thead>
+                                <tr>
+                                    <th class="w-1">No.</th>
+                                    <th>Device Name</th>
+                                    <th>Device Type</th>
+                                    <th>Lane 1</th>
+                                    <th>Lane 2</th>
+                                    <th>Lane 3</th>
+                                    <th>Lane 4</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in list %}
+                                <tr>
+                                    <td><span class="text-muted">{{ item.id }}</span></td>
+                                    <td><a href="invoice.html" class="text-inherit">{{ item.name }}</a></td>
+                                   <td>
+                                       {{ item.device_type }}
+                                   </td>
+                                    <td>
+                                        {{ item.lane_1 }}
+                                        <!-- Toogle switch for enable_1 -->
+                                        <!-- If enable_1 is -->
+                                        
+                                        <div class="toggle-switch toggle-switch-success">
+                                            <!-- onchange regarding the item id, get status of item.enable_1 -->
+                                            <input type="checkbox"
+                                                {% if item.enable_1 == 1 %}
+                                                checked
+                                                {% endif %}
+                                                id="enable_1_{{ item.id }}"
+                                                data-id="{{ item.id }}"
+                                                data-type="enable_1"
+                                                onchange="updateStatus(this, '{{ item.id }}' )"
+                                                class="toggle-switch-chec1"
+                                                
+                                                >
+                                            <label for="enable_1_{{ item.id }}"></label>
+                                        </div>      
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ item.lane_2 }}
+                                        <div class="toogle-switch toogle-switch-success">
+                                            <!-- Toogle switch for enable_2-->
+                                            <input type="checkbox"
+                                                {% if item.enable_2 == 1 %}
+                                                checked
+                                                {% endif %}
+                                                id="enable_2_{{ item.id }}"
+                                                data-id="{{ item.id }}"
+                                                data-type="enable_2"
+                                                onchange="updateStatus(this, '{{ item.id }}' )"
+                                                class="toggle-switch-chec2"
+                                                >
+                                            <label for="enable_2_{{ item.id }}"></label>
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        {{ item.lane_3 }}
+                                         <!-- Toogle enable_3 switch  and on change update the status to the database-->                                                                           
+                                        <div class="toggle-switch toggle-switch-success">
+                                            <input type="checkbox"
+                                                {% if item.enable_3 == 1 %}
+                                                checked
+                                                {% endif %}
+                                                id="enable_3_{{ item.id }}"
+                                                data-id="{{ item.id }}"
+                                                data-type="enable_3"
+                                                onchange="updateStatus(this, '{{ item.id }}')"
+                                                class="toggle-switch-chec3"
+                                            >
+                                            <label for="enable_3_{{ item.id }}"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ item.lane_4 }}
+                                        <!-- Toogle enable_4 switch -->
+                                        <!-- onchange refer to device id-->
+                                        <div class="toggle-switch toggle-switch-success">
+                                            <input type="checkbox"
+                                                {% if item.enable_4 == 1 %}
+                                                checked
+                                                {% endif %}
+                                                id="enable_4_{{ item.id }}"
+                                                data-id="{{ item.id }}"
+                                                data-type="enable_4"
+                                                onchange="updateStatus(this, '{{ item.id }}')"
+                                                class="toggle-switch-chec4"
+                                            >
+    
+                                            <label for="enable_4_{{ item.id }}"></label>
+                                        </div>
+         
+                                    </td>
+                                    <td>
+                                        {{ item.city }}
+                                    </td>
+                                    <td>
+                                        {{ item.state }}
+                                    </td>
+                                    <td>{% if item.enable %}
+                                        <span class="status-icon bg-success"></span>
+                                        {% else %}
+                                        <span class="status-icon bg-warning"></span>
+                                        {% endif %}
+                                    </td>
+                                    
+                                    <td class="text-right">
+                                        {% if request.user.is_admin %}
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <!-- <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-fw fa-check"></i> Approve</a>
+                                                    <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-fw fa-times"></i> Reject</a>
+                                                    <div class="dropdown-divider"></div> -->
+                                                    <a class="dropdown-item" href="/device/edit/{{item.id}}"><i class="fe fe-edit"></i> Edit</a>
+                                                    <a class="dropdown-item" href="/delete/{{item.id}}"><i class="fa fa-fw fa-trash"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if request.user.normal_user or request.user.advanced_user %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                    <input type="hidden" name="_method" value="PUT">       
+                                                    <input type="submit" class="btn btn-sm btn-primary" value="Connect"> 
+                                                </form>  
+                                            </div>
+                                            <div class="col-md-6"> 
+                                                <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        
+                                                    <input type="hidden" name="_method" value="PUT">
+                                                    
+                                                    <input type="submit" class="btn btn-sm btn-danger" value="Disconnect">        
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        {% endif %}
+                                    </td>
+                                    
+                                </tr>
+                                {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                        <script>
+                            require(['datatables', 'jquery'], function (datatable, $) {
+                                $('.datatable').DataTable();
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottombar js-bottombar" style="display: none">
+        <a href="#" class="bottombar-close js-bottombar-close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-x">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </a>
+        <div class="container position-relative d-flex align-items-center">
+            <a href="https://gumroad.com/l/tabler-email?utm_source=demo" class="bottombar-image">
+                <picture>
+                    <source srcset="https://tabler.io/img/bottombar.webp" type="image/webp">
+                    <source srcset="https://tabler.io/img/bottombar.png" type="image/jpeg">
+                    <img src="https://tabler.io/img/bottombar.png" alt="">
+                </picture>
+            </a>
+            <div class="d-lg-flex flex-fill align-items-center">
+                <div class="mr-2">
+                    50 eye-catching templates tested in 90+ email clients. Compose your own, mobile optimized email
+                    message in less than 5 minutes!
+                </div>
+                <div class=" ml-auto mt-2 mt-lg-0">
+                    <a href="https://gumroad.com/l/tabler-email?utm_source=demo"
+                        class="btn btn-sm btn-green text-nowrap" target="_blank">More info</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+
+<script>
+
+    //UPDATE STATUS OF SPECIFIC DEVICE ACCORDING TO ITS ID
+    
+
+    function updateStatus(element , id) {
+        var id = $(element).data('id');
+        console.log(id);
+        var type = $(element).data('type');
+        console.log(type);
+        var url = "/device/update/" + id ;
+        console.log(url);
+
+        //get value of check box enable_1
+        var enable = $(".toggle-switch-chec1").is(':checked');
+        console.log(enable);
+
+        // get value of check box enable_2 of this id
+        var enable_2 = $(".toggle-switch-chec2").is(':checked');
+        
+        console.log(enable_2);
+
+        // get value of check box enable_3
+        var enable_3 = $(".toggle-switch-chec3").is(':checked');
+        console.log(enable_3);
+
+        // get value of check box enable_4
+        var enable_4 = $(".toggle-switch-chec4").is(':checked');
+        console.log(enable_4);
+
+        // if enable_1 is checked then enable_2 and enable_3 and enable_4 set to false
+        switch (type) {
+            case 'enable_1':
+                if (enable == true) {
+                    $(".toggle-switch-chec2").prop('checked', false);
+                    $(".toggle-switch-chec3").prop('checked', false);
+                    $(".toggle-switch-chec4").prop('checked', false);
+                    
+                }
+                break;
+            case 'enable_2':
+                if (enable_2 == true) {
+                    $(".toggle-switch-chec1").prop('checked', false);
+                    $(".toggle-switch-chec3").prop('checked', false);
+                    $(".toggle-switch-chec4").prop('checked', false);
+                }
+                break;
+            case 'enable_3':
+                if (enable_3 == true) {
+                    $(".toggle-switch-chec1").prop('checked', false);
+                    $(".toggle-switch-chec2").prop('checked', false);
+                    $(".toggle-switch-chec4").prop('checked', false);
+                }
+                break;
+            case 'enable_4':
+                if (enable_4 == true) {
+                    $(".toggle-switch-chec1").prop('checked', false);
+                    $(".toggle-switch-chec2").prop('checked', false);
+                    $(".toggle-switch-chec3").prop('checked', false);
+                }
+                break;
+        }
+
+        //get new value of check box enable_1
+        console.log('enabled_1');
+        var enabled_1 = $(".toggle-switch-chec1").is(':checked');
+        console.log(enabled_1);
+        var enabled_2 = $(".toggle-switch-chec2").is(':checked');
+        console.log(enabled_2);
+        var enabled_3 = $(".toggle-switch-chec3").is(':checked');
+        console.log(enabled_3);
+        var enabled_4 = $(".toggle-switch-chec4").is(':checked');
+        console.log(enabled_4);
+
+        //ajax call to update status
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'enable_1': enabled_1,
+                'enable_2': enabled_2,
+                'enable_3': enabled_3,
+                'enable_4': enabled_4,
+            },
+            success: function (data) {
+                console.log(data);
+            }
+            //error
+
+        });
+
+       
+
+
+
+
+
+ 
+
+
+    }
+    
+
+    
+    
+
+           
+
+    require(['jquery'], function () {
+        $(document).ready(function () {
+
+            function setCookie(name, value, days) {
+                var expires = "";
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+            }
+
+            function getCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            if (!getCookie('bottombar-hidden')) {
+                $('.js-bottombar').show();
+            }
+
+            $('.js-bottombar-close').on('click', function (e) {
+                $('.js-bottombar').hide();
+                setCookie('bottombar-hidden', 1, 7);
+
+                e.preventDefault();
+                return false;
+            });
+        });
+    });
+</script>
+
+{% endblock javascripts %}

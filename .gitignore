@@ -1,0 +1,5 @@
+./debug.log
+./devices/_pycache_
+./accounts/_pycache_
+./devices/migrations/
+./accounts/migrations/

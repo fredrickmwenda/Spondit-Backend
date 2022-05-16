@@ -1,0 +1,189 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+
+<div class="my-3 my-md-5">
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">
+                Devices List
+            </h1>
+        </div>
+        <div class="row row-cards row-deck">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Devices</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table card-table table-vcenter text-nowrap datatable">
+                            <thead>
+                                <tr>
+                                    <th class="w-1">No.</th>
+                                    <th>User Name</th>
+                                    <th>Email</th>
+                                    <th>Phone Number</th>
+                                    <th>User Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in list %}
+                                <tr>
+                                    <td><span class="text-muted">{{ item.id }}</span></td>
+                                    <td><a href="invoice.html" class="text-inherit">{{ item.full_name }}</a></td>
+                                    <td>
+                                        {{ item.email }}
+                                    </td>
+                                    <td>
+                                        {{ item.phone_number }}
+                                    </td>
+
+
+                                    <td>{% if item.normal_user  %}
+                                          Normal User
+                                        {% elif item.advanced_user  %}
+                                          Advanced User
+                                        {% elif item.admin %}
+                                          Admin
+                                        {% elif item.staff  %}
+                                           Staff
+                                        {% else %}
+                                        <span class="status-icon bg-warning"></span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>{% if item.is_active %}
+                                        <span class="status-icon bg-success"></span>
+                                        {% else %}
+                                        <span class="status-icon bg-warning"></span>
+                                        {% endif %}
+                                    </td>
+
+                                    
+                                    <td class="text-right">
+                                        {% if request.user.is_admin %}
+                                        <a href="javascript:void(0)" class="btn btn-secondary btn-sm">Manage</a>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                              <!-- <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-fw fa-check"></i> Approve</a>
+                                              <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-fw fa-times"></i> Reject</a>
+                                              <div class="dropdown-divider"></div> -->
+                                              <a class="dropdown-item" href="/users/delete/{{item.id}}"><i class="fa fa-fw fa-trash"></i> Delete</a>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <!-- <a href="/users/edit/{{item.id}}" class="btn btn-secondary btn-sm">Edit</a> -->
+                                        {% if request.user.is_admin %}
+                                        <a class="icon" href="javascript:void(0)">
+                                            <i class="fe fe-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                        <script>
+                            require(['datatables', 'jquery'], function (datatable, $) {
+                                $('.datatable').DataTable();
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottombar js-bottombar" style="display: none">
+        <a href="#" class="bottombar-close js-bottombar-close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-x">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </a>
+        <div class="container position-relative d-flex align-items-center">
+            <a href="https://gumroad.com/l/tabler-email?utm_source=demo" class="bottombar-image">
+                <picture>
+                    <source srcset="https://tabler.io/img/bottombar.webp" type="image/webp">
+                    <source srcset="https://tabler.io/img/bottombar.png" type="image/jpeg">
+                    <img src="https://tabler.io/img/bottombar.png" alt="">
+                </picture>
+            </a>
+            <div class="d-lg-flex flex-fill align-items-center">
+                <div class="mr-2">
+                    50 eye-catching templates tested in 90+ email clients. Compose your own, mobile optimized email
+                    message in less than 5 minutes!
+                </div>
+                <div class=" ml-auto mt-2 mt-lg-0">
+                    <a href="https://gumroad.com/l/tabler-email?utm_source=demo"
+                        class="btn btn-sm btn-green text-nowrap" target="_blank">More info</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+    require(['jquery'], function () {
+        $(document).ready(function () {
+
+            function setCookie(name, value, days) {
+                var expires = "";
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+            }
+
+            function getCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+
+            if (!getCookie('bottombar-hidden')) {
+                $('.js-bottombar').show();
+            }
+
+            $('.js-bottombar-close').on('click', function (e) {
+                $('.js-bottombar').hide();
+                setCookie('bottombar-hidden', 1, 7);
+
+                e.preventDefault();
+                return false;
+            });
+        });
+    });
+</script>
+
+{% endblock javascripts %}

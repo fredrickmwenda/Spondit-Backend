@@ -1,0 +1,90 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page Notifications{% endblock %} 
+
+{% block content %}
+
+    <div class="my-3 my-md-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+              <h3 class="page-title mb-5">Activity Log</h3>
+              <div>
+                <div class="list-group list-group-transparent mb-0">
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active">
+                    <span class="icon mr-3"><i class="fe fe-inbox"></i></span>Activity Count<span class="ml-auto badge badge-primary">
+                      {{ logCount }}
+                    </span>
+                  </a>
+                  <!-- <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-send"></i></span>Sent Mail
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-alert-circle"></i></span>Important <span class="ml-auto badge badge-secondary">3</span>
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-star"></i></span>Starred
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-file"></i></span>Drafts
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-tag"></i></span>Tags
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-trash-2"></i></span>Trash
+                  </a> -->
+                </div>
+                <!-- <div class="mt-6">
+                  <a href="#" class="btn btn-secondary btn-block">Compose new Email</a>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Activities</h3>
+                </div>
+                <div class="card-body" id="notification-list">
+                    {% if logs %}
+                    <ul >
+                        {% for log in logs %}
+                        <li class="list-group-item">
+                            <a href="">                           
+                                    <div class="details">                         
+                                        <p class="font-size-sm text-muted mb-1">{{ log.content_type|capfirst }}: {{ log }}</p>
+                                    </div>
+                               
+
+                                <div class="log-time">
+                                    <span class="time">{{ log.action_time|date:"m/d/Y - g:ia" }} </span>
+                                </div>
+                                <div class="user">
+                                    <span class="">
+                                        <img src="{{ log.user.avatar }}" alt="..." class="avatar-img rounded-circle">
+                                    </span>
+                                    <span class="text-warning">{{ log.user.full_name }}</span>
+                                </div>
+
+                            </a>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+
+                    {% else %}
+                    <p> This object doesn't have a change history. It probably wasn't added via this admin site.</p>
+                    {% endif %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

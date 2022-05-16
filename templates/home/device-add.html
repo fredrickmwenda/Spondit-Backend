@@ -1,0 +1,442 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Device Information {% endblock %} 
+
+{% block content %}
+
+    <div class="my-3 my-md-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-8">
+              <form action="" method="post" class="card" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-header">
+                  <h3 class="card-title">Device Onboarding</h3>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6 col-lg-6">
+                      <div class="form-group">
+                        <label class="form-label">Name of the Device</label>
+                        <input type="text" class="form-control" name="name" placeholder="Device Name">
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">Device Type</label>
+                        <input type="text" class="form-control" name="device_type" placeholder="Device Type">
+                        <!-- <select class="form-control custom-select" name="device_type">
+                          <option value="">Select Device Type</option>
+                          <option value="1">Device Type 1</option>
+                          <option value="2">Device Type 2</option>
+                          <option value="3">Device Type 3</option>
+                        </select> -->
+                      </div>
+
+                      <div class="form-group">                    
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label class="form-label">Lane 1</label>
+                            <input type="number" class="form-control" name="lane_1" placeholder="Lane 1">
+                          </div>
+
+                          <div class="col-md-5">                           
+                              <label class="form-label">Enable Lane 1</label>
+                              <label class="custom-switch" style="padding-top: 10px">
+                                <!--custom switch input-->
+                                <input type="checkbox" name="enable_1" class="custom-switch-input switch-1" id="customChange1" data-type="enable_1" onchange="updateSwitch(this)" >
+                                <span class="custom-switch-indicator"></span>                            
+                              </label>                                           
+                          </div>                    
+                        </div>
+                      </div>
+
+
+                      <div class="form-group">                    
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label class="form-label">Lane 3</label>
+                            <input type="number" class="form-control" name="lane_3" placeholder="Lane 3">
+                          </div>
+
+                          <div class="col-md-5">                           
+                              <label class="form-label">Enable Lane 3</label>
+                              <label class="custom-switch" style="padding-top: 10px">
+                                <input type="checkbox" name="enable_3" class="custom-switch-input switch-2" id="customChange3" data-type="enable_3" onchange="updateSwitch(this)">
+                                <span class="custom-switch-indicator"></span>                            
+                              </label>                                           
+                          </div>                    
+                        </div>
+                      </div>
+                    
+
+
+
+
+                      <!-- <div class="form-group">
+                        <label class="form-label">Lane 3</label>
+                        <input type="number" class="form-control" name="frequency_3" placeholder="Lane 3">
+                      </div> -->
+<!-- 
+                      <div class="form-group">
+                        <label class="form-label">Add Extra Frequencies</label>
+                        <select name="user" id="select-users" class="form-control custom-select">
+                          <option value="">Select Value</option>
+                          <option value="1" >1</option>
+                          <option value="2" >2</option>
+                          <option value="3" >3</option>
+                          <option value="4" >4</option>
+                        </select>
+                      </div> -->
+
+                      
+                      <!-- <div id="inputArea">
+
+                      </div> -->
+                      <div class="form-group">
+                        <div class="form-label">Location</div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" name="state" placeholder="State" value="">
+                          </div>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" name="city" placeholder="City" value="">
+                          </div>
+                        </div>
+                      </div>
+
+
+                  
+                      <div class="form-group">
+                        <label class="form-label">Description <span class="form-label-small">56/100</span></label>
+                        <textarea class="form-control" name="description" rows="6" placeholder="Content.."></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="form-label">Enable</div>
+                          <label class="custom-switch">
+                            <!-- Take the value of the custom-switch if set otherwise set to 0 -->
+                            <!-- <input type="checkbox" name="enable" class="custom-switch-input" id="customChange" {% if device.enable == 1 %}checked{% endif %}> -->
+                            <input type="checkbox" name="enable" class="custom-switch-input " id="customChange"  >
+                            
+
+                            <span class="custom-switch-indicator"></span>
+                            
+                          </label>
+                      </div>
+
+ 
+ 
+  
+                    </div>
+                    <div class="col-md-6 col-lg-6">
+
+                      <div class="form-group">
+                        <label class="form-label">Device Images</label>                       
+                        <input type="file" class="form-control" name="device_images" id="customFile" multiple>   
+                      </div>
+
+                      
+
+                      <div class="form-group">
+                        <label class="form-label">Device ID</label>
+                        <input type="number" class="form-control" name="device_id" placeholder="Device ID">
+                      </div>
+
+                      
+                      <div class="form-group">                    
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label class="form-label">Lane 2</label>
+                            <input type="number" class="form-control" name="lane_2" placeholder="Lane 2">
+                          </div>
+
+                          <div class="col-md-5">                           
+                              <label class="form-label">Enable Lane 2</label>
+                              <label class="custom-switch" style="padding-top: 10px">
+                              <!--custom switch input with onchange function-->
+                                <input type="checkbox" name="enable_2" class="custom-switch-input switch-3" id="customChange2" data-type="enable_2" onchange="updateSwitch(this)">
+                                <!-- <input type="checkbox" name="enable_2" class="custom-switch-input switch-3" id="customChange"> -->
+                                <span class="custom-switch-indicator"></span>                            
+                              </label>                                           
+                          </div>                    
+                        </div>
+                      </div>
+                      <div class="form-group">                    
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label class="form-label">Lane 4</label>
+                            <input type="number" class="form-control" name="lane_4" placeholder="Lane 4">
+                          </div>
+
+                          <div class="col-md-5">                           
+                              <label class="form-label">Enable Lane 4</label>
+                              <label class="custom-switch" style="padding-top: 10px">
+
+                                <input type="checkbox" name="enable_2" class="custom-switch-input switch-4" id="customChange4" data-type="enable_4" onchange="updateSwitch(this)" >
+                                <span class="custom-switch-indicator"></span>                            
+                              </label>                                           
+                          </div>                    
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="form-label">Coordinates</div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <input type="number" class="form-control" name="lat" placeholder="Latitude" value="">
+                          </div>
+                          <div class="col-md-6">
+                            <input type="number" class="form-control" name="lng" placeholder="Longitude" value="">
+                          </div>
+                        </div>
+                      </div>
+
+ 
+
+                      
+
+
+                
+                    </div>
+
+
+                  
+                </div>
+              </div>
+              <div class="card-footer text-right">
+                <div class="d-flex">
+                  <a href="javascript:void(0)" class="btn btn-link">Cancel</a>
+                  <button type="submit" class="btn btn-primary ml-auto">Onboard Device</button>
+                </div>
+              </div>
+            </form>
+            <script>
+              require(['jquery', 'selectize'], function ($, selectize) {
+                  $(document).ready(function () {
+                      $('#input-tags').selectize({
+                          delimiter: ',',
+                          persist: false,
+                          create: function (input) {
+                              return {
+                                  value: input,
+                                  text: input
+                              }
+                          }
+                      });
+
+
+
+              
+                      $('#select-beast').selectize({});
+
+              
+                      // $('#select-users').selectize({
+                      //     render: {
+                      //         option: function (data, escape) {
+                      //             return '<div>' +
+                      //                 '<span class="image"><img src="' + data.image + '" alt=""></span>' +
+                      //                 '<span class="title">' + escape(data.text) + '</span>' +
+                      //                 '</div>';
+                      //         },
+                      //         item: function (data, escape) {
+                      //             return '<div>' +
+                      //                 '<span class="image"><img src="' + data.image + '" alt=""></span>' +
+                      //                 escape(data.text) +
+                      //                 '</div>';
+                      //         }
+                      //     }
+                      // });
+
+                      $("#select-users").change(function () {
+                        var numInputs = $(this).val();
+                        $('#inputArea').html('');
+                        for (var i = 0; i < numInputs; i++)
+                        {
+                          var j = i*1+5;
+                          var $section =  $('<div class="form-group"><label  class="form-label">Lane  '+j+'</label><input type="number" name="frequency_'+j+' " class="form-control" required placeholder="Lane '+j+'"></div>');
+                          $("#inputArea").append($section);
+                          
+                        }
+                      });
+
+  
+              
+                      
+                      $('#select-countries').selectize({
+                          render: {
+                              option: function (data, escape) {
+                                  return '<div>' +
+                                      '<span class="image"><img src="' + data.image + '" alt=""></span>' +
+                                      '<span class="title">' + escape(data.text) + '</span>' +
+                                      '</div>';
+                              },
+                              item: function (data, escape) {
+                                  return '<div>' +
+                                      '<span class="image"><img src="' + data.image + '" alt=""></span>' +
+                                      escape(data.text) +
+                                      '</div>';
+                              }
+                          }
+                      });
+                  });
+              });
+            </script>
+          </div>
+          <div class="col-lg-4">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Guideline Details</Details></h3>
+              </div>
+              <div class="card-body">
+                
+                <ul class="list-unstyled list-separated">
+
+                  <li class="list-separated-item">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        <div>
+                          <a href="javascript:void(0)" class="text-inherit"><b>Name:</b></a> Enter the name for the device.
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-separated-item">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        <div>
+                          <a href="javascript:void(0)" class="text-inherit"><b>Image :</b></a> Enter the Image for the device.
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-separated-item">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        <div>
+                          <a href="javascript:void(0)" class="text-inherit"><b>Lane:</b></a> Set lane Ranges for the devices
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+
+                  <li class="list-separated-item">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        <div>
+                          <a href="javascript:void(0)" class="text-inherit"><b>Enable:</b></a> Enable or Disable the device.
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+
+                </ul>
+
+
+
+
+
+
+
+              </div>
+            </div>
+            <script>
+              require(['input-mask']);
+            </script>
+         
+          </div>
+          <div class="col-lg-8">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $("#customChange").change(function () {
+      $.ajax({
+        url: "{% url 'change_state' %}",
+        data: {
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+          //if checked it is set to true
+          "enable": this.checked,
+        },
+        
+        type: "POST",
+        dataType: "JSON",
+      }).done(function (data) {
+        console.log(data)
+      }).always(function () {
+        console.log("match")       
+      }
+      );
+      
+    }
+    
+    )
+
+    
+  });
+
+</script> -->
+
+<script>
+  // update the state of the c
+  function updateSwitch(element) {
+    var type = $(element).data('type');
+    console.log(type);
+
+    //get the value of enable_1 custom-switch-input
+    var enable_1 = $('#customChange1').is(':checked');
+    console.log(enable_1);
+    var enable_2 = $('#customChange2').is(':checked');
+    console.log(enable_2);
+    var enable_3 = $('#customChange3').is(':checked');
+    console.log(enable_3);
+    var enable_4 = $('#customChange4').is(':checked');
+    console.log(enable_4);
+
+    //get the value of enable_1 custom-switch-input
+    switch (type) {
+      case 'enable_1':
+        if(enable_1 == true){
+          $('#customChange2').prop('checked', false);
+          $('#customChange3').prop('checked', false);
+          $('#customChange4').prop('checked', false);
+        }
+        break;
+      case 'enable_2':
+        if(enable_2 == true){
+          $('#customChange1').prop('checked', false);
+          $('#customChange3').prop('checked', false);
+          $('#customChange4').prop('checked', false);
+        }
+        break;
+      case 'enable_3':
+        if(enable_3 == true){
+          $('#customChange1').prop('checked', false);
+          $('#customChange2').prop('checked', false);
+          $('#customChange4').prop('checked', false);
+        }
+        break;
+      case 'enable_4':
+        if(enable_4 == true){
+          $('#customChange1').prop('checked', false);
+          $('#customChange2').prop('checked', false);
+          $('#customChange3').prop('checked', false);
+        }
+  }
+}
+
+  </script>
+
+{% endblock javascripts %}

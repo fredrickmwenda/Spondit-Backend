@@ -1,0 +1,74 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page Notifications{% endblock %} 
+
+{% block content %}
+
+    <div class="my-3 my-md-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+              <h3 class="page-title mb-5">Notifications</h3>
+              <div>
+                <div class="list-group list-group-transparent mb-0">
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active">
+                    <span class="icon mr-3"><i class="fe fe-inbox"></i></span>Inbox <span class="ml-auto badge badge-primary">
+                      {{ notifications|length }}
+                    </span>
+                  </a>
+                  <!-- <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-send"></i></span>Sent Mail
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-alert-circle"></i></span>Important <span class="ml-auto badge badge-secondary">3</span>
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-star"></i></span>Starred
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-file"></i></span>Drafts
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-tag"></i></span>Tags
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                    <span class="icon mr-3"><i class="fe fe-trash-2"></i></span>Trash
+                  </a> -->
+                </div>
+                <!-- <div class="mt-6">
+                  <a href="#" class="btn btn-secondary btn-block">Compose new Email</a>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Received Messages</h3>
+                </div>
+                <div class="card-body" id="notification-list">
+                  {% for notify in user_notifications %}
+
+                    <div class="media mb-3">
+                      <div class="media-body">
+                        <div class="media-title">
+                          <a href="#">{{ notify.title }}</a>
+                        </div>
+                        <h4>{{ notify.message }}</h4>
+                        <span class="text-muted">{{ notify.created_at }}</span>
+                      </div>
+                    </div>
+
+                  {% endfor %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
