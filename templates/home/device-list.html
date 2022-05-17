@@ -61,7 +61,7 @@
                                         <!-- If enable_1 is -->
                                         
                                         <div class="toggle-switch toggle-switch-success">
-                                            <!-- onchange regarding the item id, get status of item.enable_1 -->
+                                            <!--UpdateEnable -->
                                             <input type="checkbox"
                                                 {% if item.enable_1 == 1 %}
                                                 checked
@@ -160,23 +160,59 @@
                                         {% endif %}
 
                                         {% if request.user.normal_user or request.user.advanced_user %}
+                                        
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
-                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                                    <input type="hidden" name="_method" value="PUT">       
-                                                    <input type="submit" class="btn btn-sm btn-primary" value="Connect"> 
-                                                </form>  
-                                            </div>
-                                            <div class="col-md-6"> 
-                                                <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
-                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-        
-                                                    <input type="hidden" name="_method" value="PUT">
-                                                    
-                                                    <input type="submit" class="btn btn-sm btn-danger" value="Disconnect">        
-                                                </form>
-                                            </div>
+                                            {% for i in user_devices %}
+                                                {% if item.id == i.device_name_id %}
+                                                    <!-- check if i is active or not-->
+                                                    {% if i.active == 1 %}
+                                                    <div class="col-md-6">
+                                                        <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                            <input type="hidden" name="_method" value="PUT"> 
+                                                              <!-- if the ite-->  
+                                                            
+                                                            <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
+                                                        </form>  
+                                                    </div>
+
+                                                    <div class="col-md-6"> 
+                                                        <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                
+                                                            <input type="hidden" name="_method" value="PUT">
+                                                            
+                                                            <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
+                                                        </form>
+                                                    </div>    
+
+                                                    {% else %}
+                                                    <div class="col-md-6">
+                                                        <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                            <input type="hidden" name="_method" value="PUT"> 
+                                                              <!-- if the ite-->  
+                                                            <!---->
+                                                            <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
+                                                        </form>
+                                                    </div>
+
+                                                    <div class="col-md-6"> 
+                                                        <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                
+                                                            <input type="hidden" name="_method" value="PUT">
+                                                            
+                                                            <input type="submit" class="btn btn-sm btn-danger" value="Disconnected">        
+                                                        </form>
+                                                    </div> 
+                                                    {% endif %}
+
+                            
+                                                {% endif %}
+                                            {% endfor %}
+                                  
+
                                         </div>
 
                                         {% endif %}
@@ -247,6 +283,7 @@
     
 
     function updateStatus(element , id) {
+
         var id = $(element).data('id');
         console.log(id);
         var type = $(element).data('type');
@@ -256,53 +293,104 @@
 
         //get value of check box enable_1
         var enable = $(".toggle-switch-chec1").is(':checked');
-        console.log(enable);
-
-        // get value of check box enable_2 of this id
         var enable_2 = $(".toggle-switch-chec2").is(':checked');
-        
-        console.log(enable_2);
-
-        // get value of check box enable_3
         var enable_3 = $(".toggle-switch-chec3").is(':checked');
-        console.log(enable_3);
-
-        // get value of check box enable_4
         var enable_4 = $(".toggle-switch-chec4").is(':checked');
-        console.log(enable_4);
+      
+
+
+       // do operations on only the targetted id
+
+
+        //Change the staus depending on the object clicked
+        if(type == 'enable_1')
+        {
+            if(enable == true){
+                //set only toogle switches that match the id of the clicked object to false
+
+         $(".toggle-switch-chec2"+ id ).prop('checked', false);
+                $(".toggle-switch-chec3").prop('checked', false);
+                $(".toggle-switch-chec4").prop('checked', false);
+               
+
+       
+            }
+            else
+            {
+                $(".toggle-switch-chec1").prop('checked', false);
+            }
+        }
+        else if (type == 'enable_2')
+        {
+            if(enable_2 == true){
+                $(".toggle-switch-chec1").prop('checked', false);
+                $(".toggle-switch-chec3").prop('checked', false);
+                $(".toggle-switch-chec4").prop('checked', false);
+            }
+            else
+            {
+                $(".toggle-switch-chec2").prop('checked', false);
+            }
+        }
+        else if (type == 'enable_3')
+        {
+            if(enable_3 == true){
+                $(".toggle-switch-chec1").prop('checked', false);
+                $(".toggle-switch-chec2").prop('checked', false);
+                $(".toggle-switch-chec4").prop('checked', false);
+            }
+            else
+            {
+                $(".toggle-switch-chec3").prop('checked', false);
+            }
+        }
+        else if (type == 'enable_4')
+        {
+            if(enable_4 == true){
+                $(".toggle-switch-chec1").prop('checked', false);
+                $(".toggle-switch-chec2").prop('checked', false);
+                $(".toggle-switch-chec3").prop('checked', false);
+            }
+            else
+            {
+                $(".toggle-switch-chec4").prop('checked', false);
+            }
+        }
 
         // if enable_1 is checked then enable_2 and enable_3 and enable_4 set to false
-        switch (type) {
-            case 'enable_1':
-                if (enable == true) {
-                    $(".toggle-switch-chec2").prop('checked', false);
-                    $(".toggle-switch-chec3").prop('checked', false);
-                    $(".toggle-switch-chec4").prop('checked', false);
+
+
+        // switch (type) {
+        //     case 'enable_1':
+        //         if (enable == true) {
+        //             $(".toggle-switch-chec2").prop('checked', false);
+        //             $(".toggle-switch-chec3").prop('checked', false);
+        //             $(".toggle-switch-chec4").prop('checked', false);
                     
-                }
-                break;
-            case 'enable_2':
-                if (enable_2 == true) {
-                    $(".toggle-switch-chec1").prop('checked', false);
-                    $(".toggle-switch-chec3").prop('checked', false);
-                    $(".toggle-switch-chec4").prop('checked', false);
-                }
-                break;
-            case 'enable_3':
-                if (enable_3 == true) {
-                    $(".toggle-switch-chec1").prop('checked', false);
-                    $(".toggle-switch-chec2").prop('checked', false);
-                    $(".toggle-switch-chec4").prop('checked', false);
-                }
-                break;
-            case 'enable_4':
-                if (enable_4 == true) {
-                    $(".toggle-switch-chec1").prop('checked', false);
-                    $(".toggle-switch-chec2").prop('checked', false);
-                    $(".toggle-switch-chec3").prop('checked', false);
-                }
-                break;
-        }
+        //         }
+        //         break;
+        //     case 'enable_2':
+        //         if (enable_2 == true) {
+        //             $(".toggle-switch-chec1").prop('checked', false);
+        //             $(".toggle-switch-chec3").prop('checked', false);
+        //             $(".toggle-switch-chec4").prop('checked', false);
+        //         }
+        //         break;
+        //     case 'enable_3':
+        //         if (enable_3 == true) {
+        //             $(".toggle-switch-chec1").prop('checked', false);
+        //             $(".toggle-switch-chec2").prop('checked', false);
+        //             $(".toggle-switch-chec4").prop('checked', false);
+        //         }
+        //         break;
+        //     case 'enable_4':
+        //         if (enable_4 == true) {
+        //             $(".toggle-switch-chec1").prop('checked', false);
+        //             $(".toggle-switch-chec2").prop('checked', false);
+        //             $(".toggle-switch-chec3").prop('checked', false);
+        //         }
+        //         break;
+        // }
 
         //get new value of check box enable_1
         console.log('enabled_1');

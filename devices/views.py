@@ -1,5 +1,7 @@
 # import uuid
+from asyncio.windows_events import CONNECT_PIPE_INIT_DELAY
 from cgitb import enable
+from http import client
 from re import U
 from django.apps import apps
 from django.core import serializers
@@ -14,6 +16,9 @@ from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
+#from .mqtx import connect_mqtt
+
+#from .mqtt import connect_mqtt, disconnect_mqtt
 #from .mqtt import connectMqtt
 from accounts.models import UserDevices
 from .forms import DeviceField
@@ -26,6 +31,8 @@ from json import load
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
+
+import paho.mqtt.client as mqtt
 
 
 
@@ -129,7 +136,10 @@ def device_list(request):
     device_list = True
     #dont show deleted devices
     list = Device.objects.all()
-    context = {'list': list}
+    #show all userdevices for the user
+    user_devices = UserDevices.objects.filter(user_detail_id=request.user)
+
+    context = {'list': list, 'user_devices': user_devices}
 
     return render(request, "home/device-list.html", context)
 
@@ -334,7 +344,9 @@ def connect_device(request, id):
             #create a new connection
 
             UserDevices.objects.create(user_detail=request.user, device_name=device, device_connections=device_connection, remote_address=remote_address)
-
+            
+            #connect to MQTT broker
+            connect_mqtt()
             #create a log device connected
             LogEntry.objects.log_action(
                 user_id=request.user.pk,
@@ -344,6 +356,7 @@ def connect_device(request, id):
                 action_flag=ADDITION,
                 change_message=_('Connected device' + device.name),
             )
+            
             #connectMqtt(device.device_id, request.user.username)
             # async_to_sync(channel_layer.group_send)(
             #     "mqtt",
@@ -375,14 +388,16 @@ def connect_device(request, id):
                 device.save()
 
                 #reconnect the device to mqtt
-                async_to_sync(channel_layer.group_send)(
-                    "mqtt",
-                    {
-                        'type': 'connect',
-                        'topic': f"chat/{device.id}",
-                        'group': "mqtt",
-                    }
-                )
+                # async_to_sync(channel_layer.group_send)(
+                #     "mqtt",
+                #     {
+                #         'type': 'connect',
+                #         'topic': f"chat/{device.id}",
+                #         'group': "mqtt",
+                #     }
+                # )
+                connect_mqtt()
+                print(connect_mqtt())
 
                 #create a log device has been reconnected
                 LogEntry.objects.log_action(
@@ -405,6 +420,27 @@ def connect_device(request, id):
         data = {'status':'cant connect'}
         return JsonResponse(data, status=400)
 
+def connect_mqtt():
+    topic = "chat/device"
+    broker = 'broker.emqx.io'
+    port = 8083
+    topic = "python/mqtt"
+    client_id ="mqttx_0b0b748c"
+    #connect to mqtt broker
+    def on_connect(client, userdata, flags, rc):
+        if rc == 0:
+            print("Connected to MQTT Broker!")
+            client.subscribe(topic)
+        else:
+            print("Failed to connect, return code %d\n", rc)
+    client = mqtt.Client(client_id, transport='websockets')
+    client.on_connect = on_connect
+    client.connect(broker, port, 60)
+    print("Connecting to MQTT Broker")
+    client.loop_start()
+    return client
+
+
 
 #disconnect device from mqtt
 @login_required(login_url="/login")
@@ -419,6 +455,8 @@ def disconnect_device(request, id):
             # if the connection is active, deactivate the connection
             if UserDevices.objects.get(user_detail=request.user, device_name=device).active:
                 UserDevices.objects.filter(user_detail=request.user, device_name=device).update(active=False)
+                disconnect_mqtt(client)
+                print('disconnected'+ device.device_id)
                 #create a log for the device disconnected
                 LogEntry.objects.log_action(
                     user_id=request.user.pk,
@@ -453,6 +491,11 @@ def disconnect_device(request, id):
         data = {'status':'cant connect'}
         return JsonResponse(data, status=400)
     
+
+def disconnect_mqtt(client):
+    client.disconnect()
+    client.loop_stop()
+    print("Disconnected from MQTT Broker")
 
 @login_required(login_url="/login")
 def change_state(request, id):
