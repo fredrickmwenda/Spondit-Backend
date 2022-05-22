@@ -395,6 +395,7 @@ class LoginAPIView(APIView):
                     'full_name': user.full_name,
                     'email': user.email,
                     'password': user.password,
+                    'id': user.id,
                     #'headers': headers
                     
                 }
@@ -451,7 +452,7 @@ class UserDevicesAPIView(APIView):
 
     def get(self, request):
         user  = request.user
-        devices = UserDevices.objects.all()
+        devices = UserDevices.objects.filter(user_detail=user)
         serializer = self.serializer_class(devices, many=True)
 
         response = {
@@ -467,16 +468,32 @@ class UserDevicesAPIView(APIView):
     def post(self, request):
         user = request.user
         device = Device.objects.get(id=request.data['device_id'])
-        # check if device is already connected to user
-        if UserDevices.objects.filter(user=user, device=device).exists():
-            response = {
-                'success': False,
-                'status_code': status.HTTP_400_BAD_REQUEST,
-                'message': 'Device already connected to user'
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        # check if device is connection to user exists
+        if UserDevices.objects.filter(user_detail=user, device_name=device).exists():
+            #check if device connection is active
+            if UserDevices.objects.get(user_detail=user, device_name=device).active:
+                response = {
+                    'success': False,
+                    'status_code': status.HTTP_400_BAD_REQUEST,
+                    'message': 'Device is already connected to user'
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                
+                user_devices = UserDevices.objects.get(user_detail=user, device_name=device)
+                user_devices.active = True
+                user_devices.device_connections += 1
+                user_devices.save()
+                response = {
+                    'success': True,
+                    'status_code': status.HTTP_200_OK,
+                    'message': 'Device connected to user successfully'
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
         else:
-            user_devices = UserDevices(user=user, device=device)
+            #if it doesnt exist then create a new connection
+            user_devices = UserDevices(user_detail=user, device_name=device, active = True, device_connections=1)
             user_devices.save()
             serializer = self.serializer_class(user_devices)
             response = {
@@ -485,6 +502,8 @@ class UserDevicesAPIView(APIView):
                 'message': 'Successfully connected device',
                 'connected_devices': serializer.data
             }
+            return Response(response, status=status.HTTP_200_OK)
+            
 
 
         

@@ -69,10 +69,10 @@
                                                 id="enable_1_{{ item.id }}"
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_1"
-                                                onchange="updateStatus(this, '{{ item.id }}' )"
                                                 class="toggle-switch-chec1"
+                                                onchange="updateStatus(this, '{{ item.id }}')">
                                                 
-                                                >
+                                                
                                             <label for="enable_1_{{ item.id }}"></label>
                                         </div>      
                                         </div>
@@ -88,7 +88,8 @@
                                                 id="enable_2_{{ item.id }}"
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_2"
-                                                onchange="updateStatus(this, '{{ item.id }}' )"
+                                                onchange="updateStatus(this, '{{ item.id }}')"
+                                                
                                                 class="toggle-switch-chec2"
                                                 >
                                             <label for="enable_2_{{ item.id }}"></label>
@@ -107,6 +108,7 @@
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_3"
                                                 onchange="updateStatus(this, '{{ item.id }}')"
+                                                
                                                 class="toggle-switch-chec3"
                                             >
                                             <label for="enable_3_{{ item.id }}"></label>
@@ -115,7 +117,7 @@
                                     <td>
                                         {{ item.lane_4 }}
                                         <!-- Toogle enable_4 switch -->
-                                        <!-- onchange refer to device id-->
+                                        <!-- onchange update the status using a for-loop-->
                                         <div class="toggle-switch toggle-switch-success">
                                             <input type="checkbox"
                                                 {% if item.enable_4 == 1 %}
@@ -125,6 +127,7 @@
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_4"
                                                 onchange="updateStatus(this, '{{ item.id }}')"
+
                                                 class="toggle-switch-chec4"
                                             >
     
@@ -162,7 +165,31 @@
                                         {% if request.user.normal_user or request.user.advanced_user %}
                                         
                                         <div class="row">
+                                            <!--if the user is connected -->
                                             {% for i in user_devices %}
+                                                <!-- if user isnt  connected to user device-->
+                                                {% if i.user_detail_id  != request.user.id %}
+                                                <div class="col-md-6">
+                                                    <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                        <input type="hidden" name="_method" value="PUT"> 
+                                                          <!-- if the ite-->  
+                                                        <!---->
+                                                        <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-6"> 
+                                                    <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            
+                                                        <input type="hidden" name="_method" value="PUT">
+                                                        
+                                                        <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
+                                                    </form>
+                                                </div>
+           
+                                                {% endif %}
+                                                
                                                 {% if item.id == i.device_name_id %}
                                                     <!-- check if i is active or not-->
                                                     {% if i.active == 1 %}
@@ -210,6 +237,7 @@
 
                             
                                                 {% endif %}
+                                      
                                             {% endfor %}
                                   
 
@@ -275,153 +303,168 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+<script>
+    //listen to the onchange  event of a checkbox
+  
+
+</script>
 
 
 <script>
 
     //UPDATE STATUS OF SPECIFIC DEVICE ACCORDING TO ITS ID
+
+
+
+
     
 
     function updateStatus(element , id) {
 
-        var id = $(element).data('id');
-        console.log(id);
+        var id = $(element).data('id');     
         var type = $(element).data('type');
-        console.log(type);
         var url = "/device/update/" + id ;
-        console.log(url);
+
+
+    
+       
 
         //get value of check box enable_1
-        var enable = $(".toggle-switch-chec1").is(':checked');
+        var enable_1 = $(".toggle-switch-chec1").is(':checked');
         var enable_2 = $(".toggle-switch-chec2").is(':checked');
         var enable_3 = $(".toggle-switch-chec3").is(':checked');
         var enable_4 = $(".toggle-switch-chec4").is(':checked');
-      
-
-
        // do operations on only the targetted id
 
 
         //Change the staus depending on the object clicked
         if(type == 'enable_1')
         {
-            if(enable == true){
+            if(enable_1 == true){
                 //set only toogle switches that match the id of the clicked object to false
+                //only change the enable_2, enable_3 and enable_4 to false for the specific id
+                $.each($(".toggle-switch-chec2"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
 
-         $(".toggle-switch-chec2"+ id ).prop('checked', false);
-                $(".toggle-switch-chec3").prop('checked', false);
-                $(".toggle-switch-chec4").prop('checked', false);
-               
+                $.each($(".toggle-switch-chec3"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
 
-       
-            }
-            else
-            {
-                $(".toggle-switch-chec1").prop('checked', false);
-            }
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
+                            
+           }
         }
         else if (type == 'enable_2')
         {
             if(enable_2 == true){
-                $(".toggle-switch-chec1").prop('checked', false);
-                $(".toggle-switch-chec3").prop('checked', false);
-                $(".toggle-switch-chec4").prop('checked', false);
+                $.each($(".toggle-switch-chec1"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
+
+                $.each($(".toggle-switch-chec3"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
+
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
+       
             }
-            else
-            {
-                $(".toggle-switch-chec2").prop('checked', false);
-            }
+            // else
+            // {
+            //     $(".toggle-switch-chec2").prop('checked', false);
+            // }
         }
         else if (type == 'enable_3')
         {
             if(enable_3 == true){
-                $(".toggle-switch-chec1").prop('checked', false);
-                $(".toggle-switch-chec2").prop('checked', false);
-                $(".toggle-switch-chec4").prop('checked', false);
+                $.each($(".toggle-switch-chec1"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
+
+                $.each($(".toggle-switch-chec2"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
+
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
             }
-            else
-            {
-                $(".toggle-switch-chec3").prop('checked', false);
-            }
+            // else
+            // {
+            //     $(".toggle-switch-chec3").prop('checked', false);
+            // }
         }
         else if (type == 'enable_4')
         {
             if(enable_4 == true){
-                $(".toggle-switch-chec1").prop('checked', false);
-                $(".toggle-switch-chec2").prop('checked', false);
-                $(".toggle-switch-chec3").prop('checked', false);
+                $.each($(".toggle-switch-chec1"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
+
+                $.each($(".toggle-switch-chec2"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                    }
+                });
+
+                $.each($(".toggle-switch-chec3"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        
+                    }
+                });
             }
-            else
-            {
-                $(".toggle-switch-chec4").prop('checked', false);
-            }
+            // else
+            // {
+            //     $(".toggle-switch-chec4").prop('checked', false);
+            // }
         }
 
-        // if enable_1 is checked then enable_2 and enable_3 and enable_4 set to false
-
-
-        // switch (type) {
-        //     case 'enable_1':
-        //         if (enable == true) {
-        //             $(".toggle-switch-chec2").prop('checked', false);
-        //             $(".toggle-switch-chec3").prop('checked', false);
-        //             $(".toggle-switch-chec4").prop('checked', false);
-                    
-        //         }
-        //         break;
-        //     case 'enable_2':
-        //         if (enable_2 == true) {
-        //             $(".toggle-switch-chec1").prop('checked', false);
-        //             $(".toggle-switch-chec3").prop('checked', false);
-        //             $(".toggle-switch-chec4").prop('checked', false);
-        //         }
-        //         break;
-        //     case 'enable_3':
-        //         if (enable_3 == true) {
-        //             $(".toggle-switch-chec1").prop('checked', false);
-        //             $(".toggle-switch-chec2").prop('checked', false);
-        //             $(".toggle-switch-chec4").prop('checked', false);
-        //         }
-        //         break;
-        //     case 'enable_4':
-        //         if (enable_4 == true) {
-        //             $(".toggle-switch-chec1").prop('checked', false);
-        //             $(".toggle-switch-chec2").prop('checked', false);
-        //             $(".toggle-switch-chec3").prop('checked', false);
-        //         }
-        //         break;
-        // }
-
-        //get new value of check box enable_1
-        console.log('enabled_1');
-        var enabled_1 = $(".toggle-switch-chec1").is(':checked');
-        console.log(enabled_1);
-        var enabled_2 = $(".toggle-switch-chec2").is(':checked');
-        console.log(enabled_2);
-        var enabled_3 = $(".toggle-switch-chec3").is(':checked');
-        console.log(enabled_3);
-        var enabled_4 = $(".toggle-switch-chec4").is(':checked');
-        console.log(enabled_4);
-
-        //ajax call to update status
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'enable_1': enabled_1,
-                'enable_2': enabled_2,
-                'enable_3': enabled_3,
-                'enable_4': enabled_4,
-            },
-            success: function (data) {
-                console.log(data);
-            }
-            //error
-
-        });
+        //get value of check box enable_1
+        var enable_1 = $(".toggle-switch-chec1").is(':checked');
+        var enable_2 = $(".toggle-switch-chec2").is(':checked');
+        var enable_3 = $(".toggle-switch-chec3").is(':checked');
+        var enable_4 = $(".toggle-switch-chec4").is(':checked');
 
        
+
 
 
 

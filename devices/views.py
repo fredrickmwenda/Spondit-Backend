@@ -80,18 +80,19 @@ def device_add(request):
             #longitude = form.cleaned_data.get('lng')
             enable = form.cleaned_data.get('enable')
 
-            x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-            if x_forwarded_for:
-                remote_address = x_forwarded_for.split(',')[-1].strip()
-            else:
-                remote_address = request.META.get('REMOTE_ADDR') + "&" + request.META.get(
-                    'HTTP_USER_AGENT') + "&" + request.META.get('SERVER_PROTOCOL')
+            # x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+            # if x_forwarded_for:
+            #     remote_address = x_forwarded_for.split(',')[-1].strip()
+            # else:
+            #     remote_address = request.META.get('REMOTE_ADDR') + "&" + request.META.get(
+            #         'HTTP_USER_AGENT') + "&" + request.META.get('SERVER_PROTOCOL')
             
             device_save = Device.objects.create(name = device_name, device_type = device_type, device_id = device_id, 
             lane_1 = lane_1, enable_1 = enable_1, lane_2 = lane_2, enable_2 = enable_2, lane_3 = lane_3, enable_3 = enable_3, 
             lane_4 = lane_4, enable_4 = enable_4,  description = description, state = state, city = city,
             # lat = latitude, lng = longitude, 
-             enable = enable, remote_address = remote_address
+             enable = enable, 
+             #remote_address = remote_address
              )
             
 
@@ -129,6 +130,8 @@ def device_add(request):
 
 @login_required(login_url="/login/")
 def device_list(request):
+
+
     """
     :param request:
     :return:
@@ -335,15 +338,17 @@ def connect_device(request, id):
             device_connection = 1
 
             #take the ip address of the user connecting to the device
-            x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-            if x_forwarded_for:
-                remote_address = x_forwarded_for.split(',')[-1].strip()
-            else:
-                remote_address = request.META.get('REMOTE_ADDR') + "&" + request.META.get(
-                    'HTTP_USER_AGENT') + "&" + request.META.get('SERVER_PROTOCOL')
-            #create a new connection
+            # x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+            # if x_forwarded_for:
+            #     remote_address = x_forwarded_for.split(',')[-1].strip()
+            # else:
+            #     remote_address = request.META.get('REMOTE_ADDR') + "&" + request.META.get(
+            #         'HTTP_USER_AGENT') + "&" + request.META.get('SERVER_PROTOCOL')
+            # #create a new connection
 
-            UserDevices.objects.create(user_detail=request.user, device_name=device, device_connections=device_connection, remote_address=remote_address)
+            UserDevices.objects.create(user_detail=request.user, device_name=device, device_connections=device_connection, 
+            # remote_address=remote_address
+            )
             
             #connect to MQTT broker
             connect_mqtt()
@@ -455,7 +460,7 @@ def disconnect_device(request, id):
             # if the connection is active, deactivate the connection
             if UserDevices.objects.get(user_detail=request.user, device_name=device).active:
                 UserDevices.objects.filter(user_detail=request.user, device_name=device).update(active=False)
-                disconnect_mqtt(client)
+                #disconnect_mqtt(client)
                 print('disconnected'+ device.device_id)
                 #create a log for the device disconnected
                 LogEntry.objects.log_action(

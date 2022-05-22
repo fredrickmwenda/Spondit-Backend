@@ -234,11 +234,11 @@ class UserProfile(models.Model):
         return str(self.user.email) + ' Profile'        
 
     def __unicode__(self):
-        return '%s' %(self.full_name)
+        return '%s' %(self.user)
 
     def create_profile(sender, **kwargs):
         if kwargs["created"]:
-            user_profile = UserProfile.objects.create(full_name=kwargs["instance"])
+            user_profile = UserProfile.objects.create(user=kwargs["instance"])
     post_save.connect(create_profile, sender=User)
 
 class NotificationChannel(models.Model):
