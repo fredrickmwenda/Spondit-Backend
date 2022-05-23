@@ -338,6 +338,8 @@
 
 
         //Change the staus depending on the object clicked
+        //create an  empty array
+        var data = {};
         if(type == 'enable_1')
         {
             if(enable_1 == true){
@@ -347,6 +349,9 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_2'] = false;
+
                     }
                 });
 
@@ -354,6 +359,9 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_3'] = false;
+
                     }
                 });
 
@@ -361,8 +369,12 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_4'] = false;
                     }
                 });
+                //store the value in the data array
+                data['enable_1'] = true;
                             
            }
         }
@@ -373,6 +385,9 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_1'] = false;
+
                     }
                 });
 
@@ -380,6 +395,8 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_3'] = false;
                     }
                 });
 
@@ -387,8 +404,12 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_4'] = false;
                     }
                 });
+                //store the value in the data array
+                data['enable_2'] = true;
        
             }
             // else
@@ -403,6 +424,8 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_1'] = false;
                     }
                 });
 
@@ -410,6 +433,8 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_2'] = false;
                     }
                 });
 
@@ -417,8 +442,12 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_4'] = false;
                     }
                 });
+                //store the value in the data array
+                data['enable_3'] = true;
             }
             // else
             // {
@@ -432,6 +461,8 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_1'] = false;
                     }
                 });
 
@@ -439,6 +470,8 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //store the value in the data array
+                        data['enable_2'] = false;
                     }
                 });
 
@@ -447,21 +480,37 @@
                     {
                         $(value).prop('checked', false);
                         //subsscribe to the topic
+                        //store the value in the data array
+                        data['enable_3'] = false;
                         
                     }
                 });
+                //store the value in the data array
+                data['enable_4'] = true;
             }
             // else
             // {
             //     $(".toggle-switch-chec4").prop('checked', false);
             // }
         }
+        console.log(data);
 
-        //get value of check box enable_1
-        var enable_1 = $(".toggle-switch-chec1").is(':checked');
-        var enable_2 = $(".toggle-switch-chec2").is(':checked');
-        var enable_3 = $(".toggle-switch-chec3").is(':checked');
-        var enable_4 = $(".toggle-switch-chec4").is(':checked');
+        // use the data array to update the status of the device
+        $.ajax({
+            url: "/device/state/" + id,
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            }
+        });
+
+
+        
+
+
+
 
        
 

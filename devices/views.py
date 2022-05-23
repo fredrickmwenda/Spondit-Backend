@@ -1,4 +1,5 @@
 # import uuid
+import json
 from asyncio import transports
 from asyncio.windows_events import CONNECT_PIPE_INIT_DELAY
 from cgitb import enable
@@ -468,6 +469,44 @@ def disconnect_device(request, id):
     else:
         data = {'status':'cant connect'}
         return JsonResponse(data, status=400)
+
+
+@login_required(login_url="/login")
+def enable_state(request, id):
+    #get data from ajax request
+    if request.method == 'POST':
+        # get the json data from ajax request
+        data = json.loads(request.body)
+        enable_1 = data['enable_1']
+        enable_2 = data['enable_2']
+        enable_3 = data['enable_3']
+        enable_4 = data['enable_4']
+
+        # update the device query set
+        device = Device.objects.get(id=id)
+        device.enable_1 = enable_1
+        device.enable_2 = enable_2
+        device.enable_3 = enable_3
+        device.enable_4 = enable_4
+        device.save()
+
+        # create a log for the device state changed
+        LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=ContentType.objects.get_for_model(device).pk,
+            object_id=device.pk,
+            object_repr=device.name,
+            action_flag=CHANGE,
+            change_message=_('Changed state of device'),
+        )
+
+        data = {'status':'success'}
+        return JsonResponse(data, status=200)
+    else:
+        data = {'status':'cant connect'}
+        return JsonResponse(data, status=400)
+
+
     
 #connect device to mqtt
 topic = 'chat/mqtt'
@@ -524,51 +563,7 @@ def disconnect_mqtt():
 
 
 
-@login_required(login_url="/login")
-def change_state(request, id):
-    print('state')
-    if request.method=='POST':
-        device = Device.objects.get(id=id)
-        # get the
-        #get  enable_1, enable_2, enable_3, enable_4 from ajax
-        enable_1 = request.POST.get('enable_1')
-        enable_2 = request.POST.get('enable_2')
-        enable_3 = request.POST.get('enable_3')
-        enable_4 = request.POST.get('enable_4')
 
-        #update the state
-        device.enable_1 = enable_1
-        device.enable_2 = enable_2
-        device.enable_3 = enable_3
-        device.enable_4 = enable_4
-        device.save()
-
-
-        #each time the state is changed, create a log
-        LogEntry.objects.log_action(
-            user_id=request.user.pk,
-            content_type_id=ContentType.objects.get_for_model(device).pk,
-            object_id=device.pk,
-            object_repr=device.device_name.name,
-            action_flag=CHANGE,
-            change_message=_('Changed Lane state'),
-        )
-
-        # subscribe the device to the mqtt channel
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "mqtt",
-            {
-                'type': 'subscribe',
-                'topic': f"chat/{device.device_id}",
-                'group': "mqtt",
-            }
-        )
-
-        return redirect('device_list')
-    else:
-        print('cant change state')
-        return redirect('device_list')
 
 
 
