@@ -1,4 +1,5 @@
 # import uuid
+from asyncio import transports
 from asyncio.windows_events import CONNECT_PIPE_INIT_DELAY
 from cgitb import enable
 from http import client
@@ -425,25 +426,10 @@ def connect_device(request, id):
         data = {'status':'cant connect'}
         return JsonResponse(data, status=400)
 
-def connect_mqtt():
-    topic = "chat/device"
-    broker = 'broker.emqx.io'
-    port = 8083
-    topic = "python/mqtt"
-    client_id ="mqttx_0b0b748c"
-    #connect to mqtt broker
-    def on_connect(client, userdata, flags, rc):
-        if rc == 0:
-            print("Connected to MQTT Broker!")
-            client.subscribe(topic)
-        else:
-            print("Failed to connect, return code %d\n", rc)
-    client = mqtt.Client(client_id, transport='websockets')
-    client.on_connect = on_connect
-    client.connect(broker, port, 60)
-    print("Connecting to MQTT Broker")
-    client.loop_start()
-    return client
+
+
+
+
 
 
 
@@ -460,8 +446,8 @@ def disconnect_device(request, id):
             # if the connection is active, deactivate the connection
             if UserDevices.objects.get(user_detail=request.user, device_name=device).active:
                 UserDevices.objects.filter(user_detail=request.user, device_name=device).update(active=False)
-                #disconnect_mqtt(client)
-                print('disconnected'+ device.device_id)
+                
+                disconnect_mqtt()
                 #create a log for the device disconnected
                 LogEntry.objects.log_action(
                     user_id=request.user.pk,
@@ -471,19 +457,6 @@ def disconnect_device(request, id):
                     action_flag=CHANGE,
                     change_message=_('Disconnected device'),
                 )
-                # use async to disconnect the device
-                # async_to_sync(channel_layer.group_send)(
-                #     #"device_" + device.device_id,
-                #     "mqtt",
-                #     {
-                #         'type': 'disconnect',
-
-
-                #     }
-                # )
-
-   
-
                 data = {'status':'success'}
                 return JsonResponse(data, status=200)
             # if the connection is not active, do nothing
@@ -496,11 +469,60 @@ def disconnect_device(request, id):
         data = {'status':'cant connect'}
         return JsonResponse(data, status=400)
     
+#connect device to mqtt
+topic = 'chat/mqtt'
+broker = 'broker.emqx.io'
+port = 8083
+client_id = 'mqttx_07c399d2'
+client_conn = mqtt.Client(client_id, transport='websockets')
 
-def disconnect_mqtt(client):
-    client.disconnect()
-    client.loop_stop()
-    print("Disconnected from MQTT Broker")
+
+def connect_mqtt():
+    def on_connect(client, userdata, flags, rc):
+        if rc == 0:
+            print("Connected to broker")
+            client.subscribe(topic)
+        else:
+            print("Connection failed", rc)
+    client_conn.connect(broker, port, 60)
+    client_conn.loop_start()
+    return client_conn
+
+def disconnect_mqtt():
+    #check if the client is connected
+    if client_conn.is_connected():
+        client_conn.disconnect()
+        print("Disconnected from broker")
+        #client_conn.loop_stop()
+
+
+# def connect_mqtt():
+#     topic = "chat/device"
+#     broker = 'broker.emqx.io'
+#     port = 8083
+#     topic = "python/mqtt"
+#     client_id ="mqttx_0b0b748c"
+#     #connect to mqtt broker
+#     def on_connect(client, userdata, flags, rc):
+#         if rc == 0:
+#             print("Connected to MQTT Broker!")
+#             client.subscribe(topic)
+#         else:
+#             print("Failed to connect, return code %d\n", rc)
+#     client = mqtt.Client(client_id, transport='websockets')
+#     client.on_connect = on_connect
+#     client.connect(broker, port, 60)
+#     print("Connecting to MQTT Broker")
+#     client.loop_start()
+#     return client
+
+#disconnect device from mqtt
+# def disconnect_mqtt():
+#     if client.is_connected():
+#         client.disconnect()
+#         print("Disconnected from MQTT Broker")
+
+
 
 @login_required(login_url="/login")
 def change_state(request, id):

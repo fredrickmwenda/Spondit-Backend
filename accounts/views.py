@@ -454,7 +454,6 @@ class UserDevicesAPIView(APIView):
         user  = request.user
         devices = UserDevices.objects.filter(user_detail=user)
         serializer = self.serializer_class(devices, many=True)
-
         response = {
             'success': True,
             'status_code': status.HTTP_200_OK,
@@ -543,11 +542,43 @@ class UserDevicesAPIView(APIView):
         return Response(response, status=status.HTTP_200_OK)
     
 
+class DisconnectDeviceAPIView(APIView):
+    #permission_class = (IsAuthenticated)
+    def post(self, request):
+        user = request.user
+        device = Device.objects.get(id=request.data['device_id'])
+        #check if user is connected to device
+        if UserDevices.objects.filter(user=user, device=device).exists():
+            #check if device connection is active
+            if UserDevices.objects.get(user=user, device=device).active:
+                #set device connection to false
+                user_device = UserDevices.objects.get(user=user, device=device)
+                user_device.active = False
+                user_device.save()
+                response = {
+                    'success': True,
+                    'status_code': status.HTTP_200_OK,
+                    'message': 'Successfully disconnected device'
+                }
+                return Response(response, status=status.HTTP_200_OK)
+            else:
+                response = {
+                    'success': False,
+                    'status_code': status.HTTP_400_BAD_REQUEST,
+                    'message': 'Device is not connected to user'
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            response = {
+                'success': False,
+                'status_code': status.HTTP_400_BAD_REQUEST,
+                'message': 'User is not connected to device'
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
+# class LogoutApiView()
     
     
 

@@ -1,6 +1,6 @@
 from xml.etree.ElementInclude import include
 from django.urls import path,  re_path
-from .views import CurrentUserViewSet, DeviceListView, LoginAPIView, UserDevicesAPIView, create_users, history_view, login_view, logout_view, notifications_view, profile,   register_user, home, update_profile, users_device_add, users_device_list, users_list
+from .views import CurrentUserViewSet, DeviceListView, DisconnectDeviceAPIView, LoginAPIView, UserDevicesAPIView, create_users, history_view, login_view, logout_view, notifications_view, profile,   register_user, home, update_profile, users_device_add, users_device_list, users_list
 from django.contrib.auth.views import LogoutView
 from rest_framework_simplejwt import views as jwt_views
 
@@ -25,6 +25,7 @@ urlpatterns = [
    # path('devices/all', DeviceAPIView.as_view(), name="all devices" ),
     #connected devices
     path('devices/connected', UserDevicesAPIView.as_view(), name="connected devices" ),
+    path('device/disconnect', DisconnectDeviceAPIView.as_view(), name="disconnect device" ),
 
 
     #profile
