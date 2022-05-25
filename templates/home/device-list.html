@@ -166,17 +166,33 @@
                                         
                                         <div class="row">
                                             <!--- if the user doesnt have user_device-->
-                                            
-                                            <!--if the user is connected -->
-                                            {% for i in user_devices %}
-                                                <!-- if user isnt  connected to user device-->
+
+                                                <div class="col-md-6">
+                                                    <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                        <input type="hidden" name="_method" value="PUT"> 
+                                                        <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-6"> 
+                                                    <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            
+                                                        <input type="hidden" name="_method" value="PUT">
+                                                        
+                                                        <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
+                                                    </form>
+                                                </div>
+
+
+                                            <!-- {% for i in user_devices %}
+
                                                 {% if i.user_detail_id  != request.user.id %}
                                                 <div class="col-md-6">
                                                     <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
                                                         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                                         <input type="hidden" name="_method" value="PUT"> 
-                                                          <!-- if the ite-->  
-                                                        <!---->
+
                                                         <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
                                                     </form>
                                                 </div>
@@ -193,13 +209,13 @@
                                                 {% endif %}
                                                 
                                                 {% if item.id == i.device_name_id %}
-                                                    <!-- check if i is active or not-->
+                                                    
                                                     {% if i.active == 1 %}
                                                     <div class="col-md-6">
                                                         <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
                                                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                                             <input type="hidden" name="_method" value="PUT"> 
-                                                              <!-- if the ite-->  
+                                                              
                                                             
                                                             <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
                                                         </form>  
@@ -220,8 +236,6 @@
                                                         <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
                                                             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                                             <input type="hidden" name="_method" value="PUT"> 
-                                                              <!-- if the ite-->  
-                                                            <!---->
                                                             <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
                                                         </form>
                                                     </div>
@@ -240,7 +254,7 @@
                             
                                                 {% endif %}
                                       
-                                            {% endfor %}
+                                            {% endfor %} -->
                                   
 
                                         </div>

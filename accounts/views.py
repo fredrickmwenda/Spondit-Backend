@@ -70,10 +70,6 @@ def login_view(request):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             user = authenticate(email=email, password=password)
-            print(f'User is: {user}')
-            print(f'username is: {email}')
-            print(f'password is: {password}')
-            print(user)
             if user is not None:
                 login(request, user)
                 return redirect("home")
