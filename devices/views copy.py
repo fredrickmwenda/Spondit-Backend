@@ -421,6 +421,9 @@ def connect_device(request, id):
 
 
 
+
+
+
 #disconnect device from mqtt
 @login_required(login_url="/login")
 def disconnect_device(request, id):
@@ -478,6 +481,93 @@ def enableState(request, id):
 
         #update the enable_1, enable_2, enable_3 and enable_4 in the database
         Device.objects.filter(id=id).update(enable_1=enable_1, enable_2=enable_2, enable_3=enable_3, enable_4=enable_4)
+
+        #subscribe to the topic according to the enable_1, enable_2, enable_3 and enable_4 by which one is true
+        if enable_1 == True:
+            #subscribe to the topic
+            async_to_sync(channel_layer.group_add)(
+                "mqtt",
+                f"chat/{device.device_id}/enable_1"
+            )
+        else:
+            #unsubscribe from the topic
+            async_to_sync(channel_layer.group_discard)(
+                "mqtt",
+                f"chat/{device.device_id}/enable_1"
+            )
+        
+        if enable_2 == True:
+            # check if  it is already subscribed
+            if not async_to_sync(channel_layer.group_contains)(
+                "mqtt",
+                f"chat/{device.device_id}/enable_2"
+            ):
+                #subscribe to the topic
+                async_to_sync(channel_layer.group_add)(
+                    "mqtt",
+                    f"chat/{device.device_id}/enable_2"
+                )
+        else:
+            # check if it is already unsubscribed
+            if async_to_sync(channel_layer.group_contains)(
+                "mqtt",
+                f"chat/{device.device_id}/enable_2"
+            ):
+                #unsubscribe from the topic
+                async_to_sync(channel_layer.group_discard)(
+                    "mqtt",
+                    f"chat/{device.device_id}/enable_2"
+                )
+    
+        if enable_3 == True:
+            # check if it is already subscribed
+            if not async_to_sync(channel_layer.group_contains)(
+                "mqtt",
+                f"chat/{device.device_id}/enable_3"
+            ):
+                #subscribe to the topic
+                async_to_sync(channel_layer.group_add)(
+                    "mqtt",
+                    f"chat/{device.device_id}/enable_3"
+                )
+        else:
+            # check if it is already unsubscribed
+            if async_to_sync(channel_layer.group_contains)(
+                "mqtt",
+                f"chat/{device.device_id}/enable_3"
+            ):
+                #unsubscribe from the topic
+                async_to_sync(channel_layer.group_discard)(
+                    "mqtt",
+                    f"chat/{device.device_id}/enable_3"
+                )
+        
+        if enable_4 == True:
+            # check if it is already subscribed
+            if not async_to_sync(channel_layer.group_contains)(
+                "mqtt",
+                f"chat/{device.device_id}/enable_4"
+            ):
+                #subscribe to the topic
+                async_to_sync(channel_layer.group_add)(
+                    "mqtt",
+                    f"chat/{device.device_id}/enable_4"
+                )
+        else:
+            # check if it is already unsubscribed
+            if async_to_sync(channel_layer.group_contains)(
+                "mqtt",
+                f"chat/{device.device_id}/enable_4"
+            ):
+                #unsubscribe from the topic
+                async_to_sync(channel_layer.group_discard)(
+                    "mqtt",
+                    f"chat/{device.device_id}/enable_4"
+                )
+            
+
+
+   
 
         # #create a log for the device enable_1, enable_2, enable_3 and enable_4 changed
         LogEntry.objects.log_action(

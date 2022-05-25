@@ -165,6 +165,8 @@
                                         {% if request.user.normal_user or request.user.advanced_user %}
                                         
                                         <div class="row">
+                                            <!--- if the user doesnt have user_device-->
+                                            
                                             <!--if the user is connected -->
                                             {% for i in user_devices %}
                                                 <!-- if user isnt  connected to user device-->
