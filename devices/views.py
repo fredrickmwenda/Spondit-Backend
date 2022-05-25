@@ -1,10 +1,12 @@
 # import uuid
+from cmath import pi
 import json
 from asyncio import transports
 from asyncio.windows_events import CONNECT_PIPE_INIT_DELAY
 from cgitb import enable
 from http import client
 from re import U
+from this import d
 from django.apps import apps
 from django.core import serializers
 from django.contrib import messages 
@@ -35,6 +37,8 @@ from asgiref.sync import async_to_sync
 
 
 import paho.mqtt.client as mqtt
+
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -127,7 +131,6 @@ def device_add(request):
     #return with msg_ok and msg_err
     return render(request, 'home/device-add.html', locals())
 
-    return render(request, "home/device-add.html", locals(), )
 
 
 @login_required(login_url="/login/")
@@ -308,20 +311,7 @@ def delete_device(request, id):
 
 
 
-# @login_required(login_url="/login")
-# def change_state(request):
-#     if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method=='POST':
-#         print(request)
-#         state = Device.objects.get(id=request.POST['id'])
-#         # print('state')
-#         state.enable = True if request.POST.get('enable') == 'true' else False
-#         print(state)
-#         state.save()
-#         data = {'status':'success', 'enable':state}
-#         return JsonResponse(data, status=200)
-#     else:
-#         data = {'status':'error'}
-#         return JsonResponse(data, status=400)
+
 
 
 @login_required(login_url="/login")
@@ -471,45 +461,54 @@ def disconnect_device(request, id):
         return JsonResponse(data, status=400)
 
 
+
 @login_required(login_url="/login")
-def enable_state(request, id):
-    #get data from ajax request
-    if request.method == 'POST':
-        # get the json data from ajax request
-        data = json.loads(request.body)
-        enable_1 = data['enable_1']
-        enable_2 = data['enable_2']
-        enable_3 = data['enable_3']
-        enable_4 = data['enable_4']
-
-        # update the device query set
+@csrf_exempt
+#receive ajax request when enable_1, enable_2, enable_3 and enable_4 are changed
+def enableState(request, id):
+    if request.is_ajax() and request.method == 'POST':
+        
         device = Device.objects.get(id=id)
-        device.enable_1 = enable_1
-        device.enable_2 = enable_2
-        device.enable_3 = enable_3
-        device.enable_4 = enable_4
-        device.save()
+    
+        #get the json
+        #get enable_1, enable_2, enable_3, enable_4 data from the json
+        enable_1 =  json.loads(request.POST.get('checkData[enable_1]'))
+        enable_2  = json.loads(request.POST.get('checkData[enable_2]'))
+        enable_3  = json.loads(request.POST.get('checkData[enable_3]'))
+        enable_4  = json.loads(request.POST.get('checkData[enable_4]'))
 
-        # create a log for the device state changed
+        print(enable_1, enable_2, enable_3, enable_4)
+
+        #update the enable_1, enable_2, enable_3 and enable_4 in the database
+        Device.objects.filter(id=id).update(enable_1=enable_1, enable_2=enable_2, enable_3=enable_3, enable_4=enable_4)
+   
+
+        # #create a log for the device enable_1, enable_2, enable_3 and enable_4 changed
         LogEntry.objects.log_action(
             user_id=request.user.pk,
             content_type_id=ContentType.objects.get_for_model(device).pk,
             object_id=device.pk,
             object_repr=device.name,
             action_flag=CHANGE,
-            change_message=_('Changed state of device'),
+            change_message=_('An Enable has been changed'),
         )
 
         data = {'status':'success'}
-        return JsonResponse(data, status=200)
+        return HttpResponse(data, status=200)
+
+
+
     else:
-        data = {'status':'cant connect'}
-        return JsonResponse(data, status=400)
+        data = {'status':'error'}
+        return HttpResponse(data, status=400)
 
 
     
 #connect device to mqtt
 topic = 'chat/mqtt'
+#an array of topics
+topics = ['chat/mqtt1', 'chat/mqtt2', 'chat/mqtt3', 'chat/mqtt4']
+topic_enable = 'chat/enable'
 broker = 'broker.emqx.io'
 port = 8083
 client_id = 'mqttx_07c399d2'
@@ -533,6 +532,16 @@ def disconnect_mqtt():
         client_conn.disconnect()
         print("Disconnected from broker")
         #client_conn.loop_stop()
+
+# subscribe to a topic in topics array
+def subscribe_mqtt(topics):
+    #check if the client is connected
+    if client_conn.is_connected():
+        for topic in topics:
+            client_conn.subscribe(topic)
+            print("Subscribed to topic", topic)
+    else:
+        print("Client is not connected")
 
 
 # def connect_mqtt():

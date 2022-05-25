@@ -360,34 +360,7 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<!-- <script type="text/javascript">
-  $(document).ready(function () {
-    $("#customChange").change(function () {
-      $.ajax({
-        url: "{% url 'change_state' %}",
-        data: {
-          csrfmiddlewaretoken: "{{ csrf_token }}",
-          //if checked it is set to true
-          "enable": this.checked,
-        },
-        
-        type: "POST",
-        dataType: "JSON",
-      }).done(function (data) {
-        console.log(data)
-      }).always(function () {
-        console.log("match")       
-      }
-      );
-      
-    }
-    
-    )
 
-    
-  });
-
-</script> -->
 
 <script>
   // update the state of the c

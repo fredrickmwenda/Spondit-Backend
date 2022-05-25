@@ -41,8 +41,8 @@
                                     <th>Lane 2</th>
                                     <th>Lane 3</th>
                                     <th>Lane 4</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>State</th>
+                                    <th>City</th>
 
                                     <th></th>
                                 </tr>
@@ -339,7 +339,7 @@
 
         //Change the staus depending on the object clicked
         //create an  empty array
-        var data = {};
+        var checkData = {};
         if(type == 'enable_1')
         {
             if(enable_1 == true){
@@ -350,7 +350,7 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_2'] = false;
+                        checkData['enable_2'] = false;
 
                     }
                 });
@@ -360,7 +360,7 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_3'] = false;
+                        checkData['enable_3'] = false;
 
                     }
                 });
@@ -370,11 +370,11 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_4'] = false;
+                        checkData['enable_4'] = false;
                     }
                 });
                 //store the value in the data array
-                data['enable_1'] = true;
+                checkData['enable_1'] = true;
                             
            }
         }
@@ -386,7 +386,7 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_1'] = false;
+                        checkData['enable_1'] = false;
 
                     }
                 });
@@ -396,7 +396,7 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_3'] = false;
+                        checkData['enable_3'] = false;
                     }
                 });
 
@@ -405,11 +405,11 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_4'] = false;
+                        checkData['enable_4'] = false;
                     }
                 });
                 //store the value in the data array
-                data['enable_2'] = true;
+                checkData['enable_2'] = true;
        
             }
             // else
@@ -425,7 +425,7 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_1'] = false;
+                        checkData['enable_1'] = false;
                     }
                 });
 
@@ -434,7 +434,7 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_2'] = false;
+                        checkData['enable_2'] = false;
                     }
                 });
 
@@ -443,11 +443,11 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_4'] = false;
+                        checkData['enable_4'] = false;
                     }
                 });
                 //store the value in the data array
-                data['enable_3'] = true;
+                checkData['enable_3'] = true;
             }
             // else
             // {
@@ -462,7 +462,7 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_1'] = false;
+                        checkData['enable_1'] = false;
                     }
                 });
 
@@ -471,7 +471,7 @@
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
-                        data['enable_2'] = false;
+                        checkData['enable_2'] = false;
                     }
                 });
 
@@ -481,30 +481,71 @@
                         $(value).prop('checked', false);
                         //subsscribe to the topic
                         //store the value in the data array
-                        data['enable_3'] = false;
+                        checkData['enable_3'] = false;
                         
                     }
                 });
                 //store the value in the data array
-                data['enable_4'] = true;
+                checkData['enable_4'] = true;
             }
             // else
             // {
             //     $(".toggle-switch-chec4").prop('checked', false);
             // }
         }
-        console.log(data);
+        console.log(checkData);
 
-        // use the data array to update the status of the device
+
+
+        var url ="/enableState/" + id + "/" ;
         $.ajax({
-            url: "/device/state/" + id,
+            url: url,
             type: 'POST',
-            data: data,
+            data: {
+                //'_token': $('input[name=_token]').val(),
+                'checkData': checkData,
+            },
+            
             dataType: 'json',
+
             success: function(data) {
                 console.log(data);
             }
         });
+
+
+
+        // use the data array to update the status of the device
+        // $.ajax({
+        //     url: "/device/state/" + id,
+        //     type: 'POST',
+        //     //send data and csfr token
+ 
+            
+        //     data: {
+        //         '_token': $('input[name=_token]').val(),
+        //         'data': data
+        //     },
+        //     },
+        //     dataType: 'json',
+        //     success: function(data) {
+        //         console.log(data);
+        //         //append the data to the table
+        //         $((".toggle-switch-chec1")[index]).prop('checked', data['enable_1']);
+        //         $((".toggle-switch-chec2")[index]).prop('checked', data['enable_2']);
+        //         $((".toggle-switch-chec3")[index]).prop('checked', data['enable_3']);
+        //         $((".toggle-switch-chec4")[index]).prop('checked', data['enable_4']);
+        //     },
+        //     error: function(xhr, textStatus, error) {
+        //         console.log(xhr.statusText);
+        //         console.log(textStatus);
+        //         console.log(error);
+                
+        //         //show error message
+        //         // $("#error-message").html(data.responseJSON.message);
+        //     }
+
+        // });
 
 
         
