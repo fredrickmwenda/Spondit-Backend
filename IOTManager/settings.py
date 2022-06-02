@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 from decouple import config
 from django.contrib import messages 
@@ -177,8 +178,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
             'rest_framework.authentication.BasicAuthentication',  # enables simple command line authentication
-            'rest_framework.authentication.SessionAuthentication',
-            'rest_framework.authentication.TokenAuthentication',     
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+            #'rest_framework.authentication.TokenAuthentication',
+            'rest_framework.authentication.SessionAuthentication',    
     ),
 
     'DEFAULT_RENDERER_CLASSES': (
@@ -257,7 +259,7 @@ MQTT_HOST = "ws://broker.emqx.io"
 MQTT_PORT = 8083
 MQTT_USER = "fred"
 MQTT_PASSWORD = "fredm12o"
-MQTT_VERSION = 311 
+
 
 
 MESSAGE_TAGS = {
@@ -267,4 +269,9 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger', 
 
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }

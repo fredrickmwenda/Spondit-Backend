@@ -171,6 +171,13 @@ class UserDevices(models.Model):
     def inactive_device(self):
         return self.filter(active=False)
 
+     #calculate time connected (in minutes)
+     #get the time the device was connected
+   
+
+     
+
+
 
     #device connections
 

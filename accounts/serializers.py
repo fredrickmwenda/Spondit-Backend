@@ -164,5 +164,10 @@ class DeviceSerializer(serializers.ModelSerializer):
 class UserDevicesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDevices
-        fields = ('user_details', 'device_name', 'issue_date')
+        fields = '__all__'
+
+class DeviceDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserDevices
+        fields = ['user_detail','device_name', 'active', 'time_connected' ]
 

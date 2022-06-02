@@ -1,7 +1,5 @@
 
-from os import access
 from re import U
-from urllib import response
 from django import template
 from django.shortcuts import render, redirect
 from django.contrib import messages 
@@ -380,7 +378,6 @@ class LoginAPIView(APIView):
                 refresh = RefreshToken.for_user(user)
                 access_token = str(refresh.access_token)
                 refresh_token = str(refresh)
- 
                 # return response with token
                 #return Response({'access_token': access_token, 'refresh_token': refresh_token, 'email': email, 'password': password  }, status=status.HTTP_200_OK)
                 response = Response()
@@ -410,79 +407,164 @@ class LoginAPIView(APIView):
 # get the devices connected to a user
 class UserDevicesAPIView(APIView):
     serializer_class  = UserDevicesSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,) 
 
+
+    def get(self, request):
+        user  = request.user
+        devices = UserDevices.objects.filter(user_detail=user)
+        serializer = self.serializer_class(devices, many=True)
+        response = {
+            'success': True,
+            'status_code': status.HTTP_200_OK,
+            'message': 'Successfully fetched all devices',
+            'connected_devices': serializer.data
+        }
+        
+        return Response(response, status=status.HTTP_200_OK)
+    
+    # connect device from Devices Model to  the requesting user using user_id and device_id
     def post(self, request):
-        # get user id from request body
-        user_id = request.data.get('user_id', {})
-        # get device_id from request body
-        device_id = request.data.get('device_id', {})
-
-       # check if device is connection to user exists
-        user_device = UserDevices.objects.filter(user_detail=user_id, device_name=device_id).first()
-        if user_device:
+        user = request.user
+        device = Device.objects.get(id=request.data['device_id'])
+        # check if device is connection to user exists
+        if UserDevices.objects.filter(user_detail=user, device_name=device).exists():
             #check if device connection is active
-            if user_device.active:
-                return Response({'error': 'Device is already connected to user'}, status=status.HTTP_400_BAD_REQUEST)
+            if UserDevices.objects.get(user_detail=user, device_name=device).active:
+                response = {
+                    'success': False,
+                    'status_code': status.HTTP_400_BAD_REQUEST,
+                    'message': 'Device is already connected to user'
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
             else:
-                user_device.active = True
-                user_device.device_connections += 1
-                user_device.save()
-                return Response({'success': 'Device is connected to user'}, status=status.HTTP_200_OK)
+                
+                user_devices = UserDevices.objects.get(user_detail=user, device_name=device)
+                user_devices.active = True
+                user_devices.device_connections += 1
+                user_devices.save()
+                response = {
+                    'success': True,
+                    'status_code': status.HTTP_200_OK,
+                    'message': 'Device connected to user successfully'
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
         else:
-            #device does not exist
-            return Response({'error': 'Device does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            #if it doesnt exist then create a new connection
+            user_devices = UserDevices(user_detail=user, device_name=device, active = True, device_connections=1)
+            user_devices.save()
+            serializer = self.serializer_class(user_devices)
+            response = {
+                'success': True,
+                'status_code': status.HTTP_200_OK,
+                'message': 'Successfully connected device',
+                'connected_devices': serializer.data
+            }
+            return Response(response, status=status.HTTP_200_OK)
+            
 
 
+        
+    # disconnect device from user
+    def delete(self, request):
+        user = request.user
+        device = Device.objects.get(id=request.data['device_id'])
+        #check if user is connected to device
+        if UserDevices.objects.filter(user=user, device=device).exists():
+            #delete connection between user and device
+            user_device = UserDevices.objects.filter(user=user, device=device).delete()
+            response = {
+                'success': True,
+                'status_code': status.HTTP_200_OK,
+                'message': 'User disconnected from device'
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        else:
+            response = {
+                'success': False,
+                'status_code': status.HTTP_400_BAD_REQUEST,
+                'message': 'User is not connected to device'
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    #number of devices connected to user
+    def get_number_of_devices(self, request):
+        user = request.user
+        devices = UserDevices.objects.filter(user=user)
+        number_of_devices = len(devices)
+        response = {    
+            'success': True,
+            'status_code': status.HTTP_200_OK,
+            'message': 'Successfully fetched number of devices',
+            'number_of_devices': number_of_devices
+        }
+        return Response(response, status=status.HTTP_200_OK)
     
 class DisconnectDeviceAPIView(APIView):
     permission_class = (IsAuthenticated)
+    authentication_classes = (TokenAuthentication,)
     serializer = DeviceDataSerializer
 
     def post(self, request):
-        user_id = request.data.get('user_id', {})
-        device_id = request.data.get('device_id', {})
-        # check if device is connection to user exists
-        user_device = UserDevices.objects.filter(user_detail=user_id, device_name=device_id).first()
-        if user_device:
+        user = request.user
+        device = Device.objects.get(id=request.data['device_id'])
+        #check if user is connected to device
+        if UserDevices.objects.filter(user=user, device=device).exists():
             #check if device connection is active
-            if user_device.active:
+            if UserDevices.objects.get(user=user, device=device).active:
+                #set device connection to false
+                user_device = UserDevices.objects.get(user=user, device=device)
                 user_device.active = False
-                #user_device.device_connections -= 1
                 user_device.save()
-                return Response({'success': 'Device is disconnected from user'}, status=status.HTTP_200_OK)
+                response = {
+                    'success': True,
+                    'status_code': status.HTTP_200_OK,
+                    'message': 'Successfully disconnected device'
+                }
+                return Response(response, status=status.HTTP_200_OK)
             else:
-                return Response({'error': 'Device is already disconnected from user'}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            #device does not exist
-            return Response({'error': 'Device does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'success': False,
+                    'status_code': status.HTTP_400_BAD_REQUEST,
+                    'message': 'Device is not connected to user'
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
+        else:
+            response = {
+                'success': False,
+                'status_code': status.HTTP_400_BAD_REQUEST,
+                'message': 'User is not connected to device'
+            }
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 #change enable1, enable_2, enable_3 and enable_4 to true or false
 class ChangeDeviceStatusAPIView(APIView):
     serializer_class = DeviceSerializer
-    permission_class = (IsAuthenticated)
+    #permission_class = (IsAuthenticated)
     def post(self, request):
-        # get user id from request body     
-        enable_1 = request.data.get('enable_1', {})
-        enable_2 = request.data.get('enable_2', {})
-        enable_3 = request.data.get('enable_3', {})
-        enable_4 = request.data.get('enable_4', {})
-        
-        #use serializer to save data
-        serializer = DeviceSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        device = Device.objects.get(id=request.data['device_id'])
+        #get enable1, enable_2, enable_3 and enable_4
+        enable1 = request.data['enable1']
+        enable2 = request.data['enable2']
+        enable3 = request.data['enable3']
+        enable4 = request.data['enable4']
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-   
-
-
-
-
-
-
+        #update enable1, enable_2, enable_3 and enable_4
+        device.enable1 = enable1
+        device.enable2 = enable2
+        device.enable3 = enable3
+        device.enable4 = enable4
+        device.save()
+        serializer = self.serializer_class(device)
+        response = {
+            'success': True,
+            'status_code': status.HTTP_200_OK,
+            'message': 'Successfully changed device status',
+            'device': serializer.data
+        }
+        return Response(response, status=status.HTTP_200_OK)
         
 
 

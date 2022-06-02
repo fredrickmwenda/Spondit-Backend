@@ -60,8 +60,6 @@ class MqttConsumer(AsyncConsumer):
                     'qos': 0,
                     'retain': False,
                     'group': 'mqtt',
-
-
                 } 
             }
         )

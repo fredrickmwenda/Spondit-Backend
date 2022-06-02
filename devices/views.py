@@ -1,11 +1,10 @@
-# import uuid
 from cmath import pi
 import json
 from asyncio import transports
 from asyncio.windows_events import CONNECT_PIPE_INIT_DELAY
 from cgitb import enable
 from http import client
-from re import U
+from re import M, U
 from this import d
 from django.apps import apps
 from django.core import serializers
@@ -20,33 +19,17 @@ from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
-#from .mqtx import connect_mqtt
-
-#from .mqtt import connect_mqtt, disconnect_mqtt
-#from .mqtt import connectMqtt
 from accounts.models import UserDevices
 from .forms import DeviceField
 from .models import DeviceImages
 from devices.forms import DeviceForm
 from devices.models import Device
 from json import load
-
-
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-
-
 import paho.mqtt.client as mqtt
-
 from django.views.decorators.csrf import csrf_exempt
-
-
-
-
-
-
-#from accounts.mqtt import MqttClient, MqttClientException, mqtt_main, disconnectMqtt
-
+from django.contrib import messages
 
 
 @login_required(login_url="/login/")
@@ -119,18 +102,19 @@ def device_add(request):
             )
 
             msg_ok = "Device added successfully"
+            messages.success(request, msg_ok)
             return redirect('device_list')
             
         else:
             print(form.errors)
             msg_err = _(u'Attention! Please correct the errors!')
+            messages.error(request, msg_err)
 
 
     form = DeviceForm()
 
     #return with msg_ok and msg_err
     return render(request, 'home/device-add.html', locals())
-
 
 
 @login_required(login_url="/login/")
@@ -150,8 +134,6 @@ def device_list(request):
     context = {'list': list, 'user_devices': user_devices}
 
     return render(request, "home/device-list.html", context)
-
-
 
 
 @login_required(login_url="/login/")
@@ -266,6 +248,7 @@ def device_edit(request, id):
                 )
 
                 msg_ok = "Device updated successfully"
+                messages.success(request, msg_ok)
                 return redirect('device_list')
             #if images are changed
             else:
@@ -283,16 +266,17 @@ def device_edit(request, id):
                     )
 
                     msg_ok = "Device updated successfully"
+                    messages.success(request, msg_ok)
                     return redirect('device_list')    
         else:
             msg_err = _(u'Attention! Please correct the errors!')
+            messages.error(request, msg_err)
+
             #print(form.errors + file_image.errors)
 
             form = DeviceForm(instance=val, initial=initial)
             #file_image = DeviceField(initial=device_initial)
     return render(request, "home/device-edit.html", locals(), )
-
-    
 
 
 def delete_device(request, id):
@@ -309,11 +293,6 @@ def delete_device(request, id):
     return redirect('/device/list')
 
 
-
-
-
-
-
 @login_required(login_url="/login")
 #connect device to mqtt
 def connect_device(request, id):
@@ -328,22 +307,15 @@ def connect_device(request, id):
        
             #initially set device_connection to 
             device_connection = 1
-
-            #take the ip address of the user connecting to the device
-            # x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-            # if x_forwarded_for:
-            #     remote_address = x_forwarded_for.split(',')[-1].strip()
-            # else:
-            #     remote_address = request.META.get('REMOTE_ADDR') + "&" + request.META.get(
-            #         'HTTP_USER_AGENT') + "&" + request.META.get('SERVER_PROTOCOL')
-            # #create a new connection
-
             UserDevices.objects.create(user_detail=request.user, device_name=device, device_connections=device_connection, 
-            # remote_address=remote_address
+        
             )
             
             #connect to MQTT broker
+           #A check if mqtt is on or not
             connect_mqtt()
+            msg_ok = "Device connected successfully"
+            messages.success(request, msg_ok)
             #create a log device connected
             LogEntry.objects.log_action(
                 user_id=request.user.pk,
@@ -354,18 +326,8 @@ def connect_device(request, id):
                 change_message=_('Connected device' + device.name),
             )
             
-            #connectMqtt(device.device_id, request.user.username)
-            # async_to_sync(channel_layer.group_send)(
-            #     "mqtt",
-            #     {
-            #         'type': 'connect',
-            #         'topic': f"chat/{device.device_id}",
-            #         'group': "mqtt",
-            #     }
-            # )
 
             data = {'status':'success'}
-            #return JsonResponse(data, status=200)
             return HttpResponse(data, status=200,)
         else:
 
@@ -373,6 +335,7 @@ def connect_device(request, id):
             if UserDevices.objects.get(user_detail=request.user, device_name=device).active:
                 #show the message that the device is already connected
                 msg_err = _(u'Attention! The device is already connected!')
+                messages.error(request, msg_err)
                 return redirect('device_list')
             # if the connection is not active, change the connection status to active
             else:
@@ -384,17 +347,14 @@ def connect_device(request, id):
                 #update the connection
                 device.save()
 
-                #reconnect the device to mqtt
-                # async_to_sync(channel_layer.group_send)(
-                #     "mqtt",
-                #     {
-                #         'type': 'connect',
-                #         'topic': f"chat/{device.id}",
-                #         'group': "mqtt",
-                #     }
-                # )
+                #call method to connect to MQTT broker
                 connect_mqtt()
-                print(connect_mqtt())
+                #if connection is successful, show the message that the device is connected to mqtt
+                msg_ok = _(u'Attention! The device is connected to mqtt!')
+                messages.success(request, msg_ok)
+
+
+            
 
                 #create a log device has been reconnected
                 LogEntry.objects.log_action(
@@ -407,6 +367,7 @@ def connect_device(request, id):
                 )
         
         msg_ok = "Device connected successfully"
+        messages.success(request, msg_ok)
 
 
         data = {'status':'success'}
@@ -416,9 +377,6 @@ def connect_device(request, id):
     else:
         data = {'status':'cant connect'}
         return JsonResponse(data, status=400)
-
-
-
 
 
 #disconnect device from mqtt
@@ -452,11 +410,12 @@ def disconnect_device(request, id):
                 return JsonResponse({'status':'error'}, status=400)
         # if the user doesn't have the device, do nothing
         else:
+            msg_error = _(u'Attention! The device is not connected!')
+            messages.error(request, msg_error)
             pass
     else:
         data = {'status':'cant connect'}
         return JsonResponse(data, status=400)
-
 
 
 @login_required(login_url="/login")
@@ -479,6 +438,59 @@ def enableState(request, id):
         #update the enable_1, enable_2, enable_3 and enable_4 in the database
         Device.objects.filter(id=id).update(enable_1=enable_1, enable_2=enable_2, enable_3=enable_3, enable_4=enable_4)
 
+       #check if enable_1 value is true
+        if enable_1:
+            #if enable_1 is true, send a message to the mqtt broker
+            #send the message to the mqtt broker
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                'receive',
+                {
+                    'type': 'mqtt_message',
+                    'message': '{"device_id":'+ str(id) +', "enable_1":'+ str(enable_1) +'}'
+                }
+            )
+        elif enable_2:
+            #if enable_2 is true, send a message to the mqtt broker
+            #send the message to the mqtt broker
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                'receive',
+                {
+                    'type': 'mqtt_message',
+                    'message': '{"device_id":'+ str(id) +', "enable_2":'+ str(enable_2) +'}'
+                }
+            )
+        elif enable_3:
+            #if enable_3 is true, send a message to the mqtt broker
+            #send the message to the mqtt broker
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                'receive',
+                {
+                    'type': 'mqtt_message',
+                    'message': '{"device_id":'+ str(id) +', "enable_3":'+ str(enable_3) +'}'
+                }
+            )
+
+        elif enable_4:
+            #if enable_4 is true, send a message to the mqtt broker
+            #send the message to the mqtt broker
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                'receive',
+                {
+                    'type': 'mqtt_message',
+                    'message': '{"device_id":'+ str(id) +', "enable_4":'+ str(enable_4) +'}'
+                }
+            )
+
+
+  
+
+ 
+
+
         # #create a log for the device enable_1, enable_2, enable_3 and enable_4 changed
         LogEntry.objects.log_action(
             user_id=request.user.pk,
@@ -499,11 +511,10 @@ def enableState(request, id):
         return HttpResponse(data, status=400)
 
 
-    
 #connect device to mqtt
 topic = 'chat/mqtt'
 #an array of topics
-topics = ['chat/mqtt1', 'chat/mqtt2', 'chat/mqtt3', 'chat/mqtt4']
+#topics = ['chat/mqtt1', 'chat/mqtt2', 'chat/mqtt3', 'chat/mqtt4']
 topic_enable = 'chat/enable'
 broker = 'broker.emqx.io'
 port = 8083
@@ -518,6 +529,7 @@ def connect_mqtt():
             client.subscribe(topic)
         else:
             print("Connection failed", rc)
+
     client_conn.connect(broker, port, 60)
     client_conn.loop_start()
     return client_conn
@@ -536,6 +548,16 @@ def subscribe_mqtt(topics):
         for topic in topics:
             client_conn.subscribe(topic)
             print("Subscribed to topic", topic)
+    else:
+        print("Client is not connected")
+    
+# unsubscribe to a topic in topics array
+def unsubscribe_mqtt(topics):
+    #check if the client is connected
+    if client_conn.is_connected():
+        for topic in topics:
+            client_conn.unsubscribe(topic)
+            print("Unsubscribed to topic", topic)
     else:
         print("Client is not connected")
 
