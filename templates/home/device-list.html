@@ -162,103 +162,81 @@
                                             </div>
                                         {% endif %}
 
-                                        {% if request.user.normal_user or request.user.advanced_user %}
-                                        
-                                        <div class="row">
-                                            <!--- if the user doesnt have user_device-->
-
-                                                <div class="col-md-6">
-                                                    <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
-                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                                        <input type="hidden" name="_method" value="PUT"> 
-                                                        <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
-                                                    </form>
-                                                </div>
-                                                <div class="col-md-6"> 
-                                                    <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
-                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-            
-                                                        <input type="hidden" name="_method" value="PUT">
-                                                        
-                                                        <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
-                                                    </form>
-                                                </div>
+                                        {% if request.user.normal_user or request.user.advanced_user %}                                       
+                                            <div class="row">
+                                                <!--Check if user_devices queryset exists-->
 
 
-                                            <!-- {% for i in user_devices %}
 
-                                                {% if i.user_detail_id  != request.user.id %}
-                                                <div class="col-md-6">
-                                                    <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
-                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                                        <input type="hidden" name="_method" value="PUT"> 
-
-                                                        <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
-                                                    </form>
-                                                </div>
-                                                <div class="col-md-6"> 
-                                                    <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
-                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-            
-                                                        <input type="hidden" name="_method" value="PUT">
-                                                        
-                                                        <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
-                                                    </form>
-                                                </div>
-           
-                                                {% endif %}
                                                 
-                                                {% if item.id == i.device_name_id %}
-                                                    
-                                                    {% if i.active == 1 %}
-                                                    <div class="col-md-6">
-                                                        <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
-                                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                                            <input type="hidden" name="_method" value="PUT"> 
-                                                              
-                                                            
-                                                            <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
-                                                        </form>  
-                                                    </div>
 
-                                                    <div class="col-md-6"> 
-                                                        <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
-                                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                
-                                                            <input type="hidden" name="_method" value="PUT">
-                                                            
-                                                            <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
-                                                        </form>
-                                                    </div>    
+                                                {% for i in user_devices %}                                                
+                                                    {% if item.id == i.device_name_id %}                                                   
+                                                        {% if i.active == 1 %}
+                                                            <div class="col-md-6">
+                                                                <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                                    <input type="hidden" name="_method" value="PUT"> 
+                                                                    
+                                                                    
+                                                                    <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
+                                                                </form>  
+                                                            </div>
 
-                                                    {% else %}
-                                                    <div class="col-md-6">
-                                                        <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
-                                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                                            <input type="hidden" name="_method" value="PUT"> 
-                                                            <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
-                                                        </form>
-                                                    </div>
+                                                            <div class="col-md-6"> 
+                                                                <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        
+                                                                    <input type="hidden" name="_method" value="PUT">
+                                                                    
+                                                                    <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
+                                                                </form>
+                                                            </div>
+                                                            {% else %}
+                                                            <div class="col-md-6">
+                                                                <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                                    <input type="hidden" name="_method" value="PUT"> 
+                                                                    <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
+                                                                </form>
+                                                            </div>
 
-                                                    <div class="col-md-6"> 
-                                                        <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
-                                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                
-                                                            <input type="hidden" name="_method" value="PUT">
-                                                            
-                                                            <input type="submit" class="btn btn-sm btn-danger" value="Disconnected">        
-                                                        </form>
-                                                    </div> 
+                                                            <div class="col-md-6"> 
+                                                                <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        
+                                                                    <input type="hidden" name="_method" value="PUT">
+                                                                    
+                                                                    <input type="submit" class="btn btn-sm btn-danger" value="Disconnected">        
+                                                                </form>
+                                                            </div> 
+
+                                                        {% endif %}
                                                     {% endif %}
 
-                            
-                                                {% endif %}
-                                      
-                                            {% endfor %} -->
-                                  
+                                                    {% empty %}
+                                                                                                            <div class="col-md-6">
+                                                            <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                                <input type="hidden" name="_method" value="PUT"> 
+                                                                
+                                                                
+                                                                <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
+                                                            </form>  
+                                                        </div>
 
-                                        </div>
+                                                        <div class="col-md-6"> 
+                                                            <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    
+                                                                <input type="hidden" name="_method" value="PUT">
+                                                                
+                                                                <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
+                                                            </form>
+                                                        </div> 
+                                                {% endfor %}
 
+                                            </div>
                                         {% endif %}
                                     </td>
                                     
@@ -393,6 +371,11 @@
                 checkData['enable_1'] = true;
                             
            }
+           else{
+            //$(".toggle-switch-chec2").prop('checked', false);
+            checkData['enable_1'] = false;
+           }
+
         }
         else if (type == 'enable_2')
         {
@@ -428,10 +411,11 @@
                 checkData['enable_2'] = true;
        
             }
-            // else
-            // {
-            //     $(".toggle-switch-chec2").prop('checked', false);
-            // }
+            else
+            {
+                //$(".toggle-switch-chec2").prop('checked', false);
+                checkData['enable_2'] = false;
+            }
         }
         else if (type == 'enable_3')
         {
@@ -465,10 +449,11 @@
                 //store the value in the data array
                 checkData['enable_3'] = true;
             }
-            // else
-            // {
-            //     $(".toggle-switch-chec3").prop('checked', false);
-            // }
+            else
+            {
+                //$(".toggle-switch-chec3").prop('checked', false);
+                checkData['enable_3'] = false;
+            }
         }
         else if (type == 'enable_4')
         {
@@ -504,10 +489,11 @@
                 //store the value in the data array
                 checkData['enable_4'] = true;
             }
-            // else
-            // {
-            //     $(".toggle-switch-chec4").prop('checked', false);
-            // }
+            else
+            {
+               // $(".toggle-switch-chec4").prop('checked', false);
+                checkData['enable_4'] = false
+            }
         }
         console.log(checkData);
 

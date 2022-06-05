@@ -283,8 +283,6 @@ def users_device_add(request):
        
     return render(request, "home/user-devices.html", context_dict)
 
-
-
 @login_required(login_url="/login/")
 def users_device_list(request):
     """

@@ -167,14 +167,14 @@ def create_users(request):
         if form.is_valid():
             
             form.save()
-            LogEntry.objects.log_action(
-                user_id=request.user.id,
-                content_type_id=1,
-                object_id=1,
-                object_repr='User',
-                action_flag=1,
-                change_message='User created'
-            )
+            # LogEntry.objects.log_action(
+            #     user_id=request.user.id,
+            #     content_type_id=1,
+            #     object_id=1,
+            #     object_repr='User',
+            #     action_flag=1,
+            #     change_message='User created'
+            # )
 
             msg = "User is created"
             return redirect('/users/list/')

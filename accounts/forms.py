@@ -165,13 +165,6 @@ class CreateUsers(UserCreationForm):
             }
         ))
     
-    phone_number = forms.CharField(
-        widget=forms.NumberInput(
-            attrs={
-                "placeholder": "Phone Number",
-                "class": "form-control"
-            }
-        ))
 
     full_name = forms.CharField(
         widget=forms.TextInput(
@@ -199,7 +192,7 @@ class CreateUsers(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('email','full_name',  'phone_number', 'password1', 'password2', 'admin', 'staff', 'normal_user', 'advanced_user',)
+        fields = ('email','full_name',  'password1', 'password2', 'admin', 'staff', 'normal_user', 'advanced_user')
 
 
 
