@@ -61,21 +61,22 @@
                               <div class="form-label">User Type</div>
                               <div class="custom-controls-stacked">
                                 <label class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" class="custom-control-input" name="normal_user" value="true" >
+                                  <input type="radio" class="custom-control-input" name="normal_user" value="true" id="normal-user" data-type="normal" onchange="updateUser(this)">
                                   <span class="custom-control-label">Normal User</span>
                                 </label>
                                 <label class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" class="custom-control-input" name="advanced_user" value="true">
+                                  <input type="radio" class="custom-control-input" name="advanced_user" value="true" id="advanced-user" data-type="advanced" onchange="updateUser(this)">
                                   <span class="custom-control-label">Advanced User</span>
                                 </label>
                                 {% if user.is_admin %}
                                 <label class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" class="custom-control-input" name="admin" value="true">
+                                  <input type="radio" class="custom-control-input" name="admin" value="true" id="admin-user" data-type="admin" onchange="updateUser(this)" >
                                   <span class="custom-control-label">Admin</span>
                                 </label>
+                  
 
                                 <label class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" class="custom-control-input" name="staff" value="true">
+                                  <input type="radio" class="custom-control-input" name="staff" value="true" id="staff-user" data-type="staff" onchange="updateUser(this)">
                                   <span class="custom-control-label">Staff</span>
                                 </label>
                                 {% endif %}
@@ -258,5 +259,62 @@
 
 {% endblock content %}
 
+
+
+
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+
+<script>
+  // update the state of the c
+  function updateUser(element) {
+    var type = $(element).data('type');
+    console.log(type);
+
+    //get the value of enable_1 custom-switch-input
+    var normal_user = $('#normal-user').is(':checked');
+    console.log(normal_user);
+    var advanced_user = $('#advanced-user').is(':checked');
+    console.log(advanced_user);
+    var staff_user = $('#staff-user').is(':checked');
+    console.log(staff_user);
+    var admin_user = $('#admin-user').is(':checked');
+    console.log(admin_user);
+
+    //get the value of enable_1 custom-switch-input
+    switch (type) {
+      case 'normal':
+        console.log('here')
+        if(normal_user == true){
+          console
+          $('#advanced-user').prop('checked', false);
+          $('#staff-user').prop('checked', false);
+          $('#admin-user').prop('checked', false);
+        }
+        break;
+      case 'advanced':
+        if(advanced_user== true){
+          $('#normal-user').prop('checked', false);
+          $('#staff-user').prop('checked', false);
+          $('#admin-user').prop('checked', false);
+        }
+        break;
+      case 'staff':
+        if(staff_user== true){
+          $('#advanced-user').prop('checked', false);
+          $('#normal-user').prop('checked', false);
+          $('#admin-user').prop('checked', false);
+        }
+        break;
+      case 'admin':
+        if(admin_user == true){
+          $('#advanced-user').prop('checked', false);
+          $('#staff-user').prop('checked', false);
+          $('#normal-user').prop('checked', false);
+        }
+  }
+}
+
+  </script>
+
+{% endblock javascripts %}

@@ -180,7 +180,7 @@ def create_users(request):
             return redirect('/users/list/')
         else:
             msg = 'Form is not valid'
-            print(msg)
+            print(form.errors.as_data())
     else:
         form = CreateUsers()
     

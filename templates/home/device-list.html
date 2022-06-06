@@ -88,10 +88,8 @@
                                                 id="enable_2_{{ item.id }}"
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_2"
-                                                onchange="updateStatus(this, '{{ item.id }}')"
-                                                
                                                 class="toggle-switch-chec2"
-                                                >
+                                                onchange="updateStatus(this, '{{ item.id }}')">
                                             <label for="enable_2_{{ item.id }}"></label>
                                         </div>
 
@@ -108,7 +106,7 @@
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_3"
                                                 onchange="updateStatus(this, '{{ item.id }}')"
-                                                
+
                                                 class="toggle-switch-chec3"
                                             >
                                             <label for="enable_3_{{ item.id }}"></label>
@@ -339,6 +337,9 @@
             if(enable_1 == true){
                 //set only toogle switches that match the id of the clicked object to false
                 //only change the enable_2, enable_3 and enable_4 to false for the specific id
+
+                checkData['enable_1'] = true;
+
                 $.each($(".toggle-switch-chec2"), function(index, value) {
                     if($(value).data('id') == id)
                     {
@@ -368,18 +369,24 @@
                     }
                 });
                 //store the value in the data array
-                checkData['enable_1'] = true;
+                
                             
            }
            else{
-            //$(".toggle-switch-chec2").prop('checked', false);
-            checkData['enable_1'] = false;
+            checkData['enable_1'] = false
+            checkData['enable_2'] = false
+            checkData['enable_3'] = false
+            checkData['enable_4'] = false
            }
 
         }
-        else if (type == 'enable_2')
+        else if(type == 'enable_2')
         {
             if(enable_2 == true){
+                //set only toogle switches that match the id of the clicked object to false
+                //only change the enable_1, enable_3 and enable_4 to false for the specific id
+
+
                 $.each($(".toggle-switch-chec1"), function(index, value) {
                     if($(value).data('id') == id)
                     {
@@ -390,12 +397,15 @@
                     }
                 });
 
+                checkData['enable_2'] = true;
+
                 $.each($(".toggle-switch-chec3"), function(index, value) {
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
                         //store the value in the data array
                         checkData['enable_3'] = false;
+
                     }
                 });
 
@@ -408,18 +418,69 @@
                     }
                 });
                 //store the value in the data array
-                checkData['enable_2'] = true;
-       
-            }
-            else
-            {
-                //$(".toggle-switch-chec2").prop('checked', false);
-                checkData['enable_2'] = false;
-            }
+                
+                            
+           }
+           else{
+
+            checkData['enable_1'] = false
+            checkData['enable_2'] = false
+            checkData['enable_3'] = false
+            checkData['enable_4'] = false
+           }
+
         }
+     
+        // else if (type == 'enable_2')
+        // {
+        //     if(enable_2 == true){
+        //         console.log('enable_2');
+        //         $.each($(".toggle-switch-chec1"), function(index, value) {
+        //             if($(value).data('id') == id)
+        //             {
+        //                 $(value).prop('checked', false);
+        //                 //store the value in the data array
+        //                 checkData['enable_1'] = false;
+
+        //             }
+        //         });
+
+
+        //         checkData['enable_2'] = true;
+
+        //         $.each($(".toggle-switch-chec3"), function(index, value) {
+        //             if($(value).data('id') == id)
+        //             {
+        //                 $(value).prop('checked', false);
+        //                 //store the value in the data array
+        //                 checkData['enable_3'] = false;
+        //             }
+        //         });
+
+        //         $.each($(".toggle-switch-chec4"), function(index, value) {
+        //             if($(value).data('id') == id)
+        //             {
+        //                 $(value).prop('checked', false);
+        //                 //store the value in the data array
+        //                 checkData['enable_4'] = false;
+        //             }
+        //         });
+        //         //store the value in the data array
+
+       
+        //     }
+        //     else
+        //     {
+        //         checkData['enable_1'] = false
+        //         checkData['enable_2'] = false
+        //         checkData['enable_3'] = false
+        //         checkData['enable_4'] = false
+        //     }
+        // }
         else if (type == 'enable_3')
         {
             if(enable_3 == true){
+                console.log('enable_3');
                 $.each($(".toggle-switch-chec1"), function(index, value) {
                     if($(value).data('id') == id)
                     {
@@ -442,8 +503,10 @@
                     if($(value).data('id') == id)
                     {
                         $(value).prop('checked', false);
+                        //subsscribe to the topic
                         //store the value in the data array
                         checkData['enable_4'] = false;
+                        
                     }
                 });
                 //store the value in the data array
@@ -451,13 +514,16 @@
             }
             else
             {
-                //$(".toggle-switch-chec3").prop('checked', false);
-                checkData['enable_3'] = false;
+                checkData['enable_1'] = false
+                checkData['enable_2'] = false
+                checkData['enable_3'] = false
+                checkData['enable_4'] = false
             }
         }
         else if (type == 'enable_4')
         {
             if(enable_4 == true){
+                console.log('enable_4');
                 $.each($(".toggle-switch-chec1"), function(index, value) {
                     if($(value).data('id') == id)
                     {
@@ -491,7 +557,9 @@
             }
             else
             {
-               // $(".toggle-switch-chec4").prop('checked', false);
+                checkData['enable_1'] = false
+                checkData['enable_2'] = false
+                checkData['enable_3'] = false
                 checkData['enable_4'] = false
             }
         }
