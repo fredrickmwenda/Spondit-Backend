@@ -397,6 +397,8 @@ class LoginAPIView(APIView):
                     'full_name': user.full_name,
                     'email': user.email,
                     'password': user.password,
+                    'normal': user.normal_user,
+                    'advanced':user.advanced_user,
                     'id': user.id,
                     #'headers': headers
                     
