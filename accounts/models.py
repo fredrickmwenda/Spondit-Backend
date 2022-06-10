@@ -1,6 +1,7 @@
 import json
 from django.db import models
 from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
+from django.dispatch import receiver
 
 from devices.models import Device
 from django.utils.translation import gettext_lazy as _
@@ -214,7 +215,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile',default=False)   
     date_of_birth = models.DateField(blank=True, null=True)
     photo = models.ImageField(upload_to ='static/assets/img', blank=True, null=True)
-    phone_number = models.IntegerField(validators=[MaxValueValidator(12)])
+    phone_number = models.IntegerField( blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     country = models.CharField(max_length=255, blank=True, null=True)
@@ -243,10 +244,22 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return '%s' %(self.user)
 
-    def create_profile(sender, **kwargs):
-        if kwargs["created"]:
-            user_profile = UserProfile.objects.create(user=kwargs["instance"])
-    post_save.connect(create_profile, sender=User)
+    # def create_profile(sender, **kwargs):
+    #     if kwargs["created"]:
+    #         user_profile = UserProfile.objects.create(user=kwargs["instance"])
+    # post_save.connect(create_profile, sender=User)
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            UserProfile.objects.create(user=instance)
+    
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save
+
+
+
 
 class NotificationChannel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)

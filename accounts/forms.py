@@ -268,7 +268,6 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            'user',
             'photo',
             'bio',
             'address',
@@ -292,18 +291,19 @@ class ProfileForm(forms.ModelForm):
             'dribbble',
             'behance',
             'reddit',
-
-
-
-
         ]
 
 
         widgets = {
-            'user': forms.TextInput(
+            'username': forms.TextInput(
                 attrs={
                     "class": "form-control"
 
+                }
+            ),
+            'email': forms.TextInput(
+                attrs={
+                    "class": "form-control"
                 }
             ),
 
@@ -444,11 +444,6 @@ class ProfileForm(forms.ModelForm):
                     "class": "form-control"
                 }
             ),
-
-
-
-
-            
 
 
         }

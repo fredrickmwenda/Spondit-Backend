@@ -22,7 +22,7 @@ from .permissions import IsAdminUser, AdvancedUserManage
 
 from .serializers import DeviceDataSerializer, DeviceSerializer, LoginSerializer, RegistrationSerializer, UserDevicesSerializer, UsersSerializer
 
-from .models import NotificationChannel, UserDevices
+from .models import NotificationChannel, UserDevices, UserProfile
 
 from .forms import CreateUserDevice, CreateUsers, LoginForm, ProfileForm,  SignUpForm, User, UserForm
 
@@ -117,6 +117,14 @@ def home(request):
         queryset = UserDevices.objects.filter(user_detail_id = request.user.id)
         user_device_connections = queryset.aggregate(sum=Sum('device_connections')).get('sum')
         #print(f'user_device_connections: {user_device_connections}')
+
+        #produce a chart of the number of devices connected to the user
+        #get all devices connected to the user
+        queryset = UserDevices.objects.filter(user_detail_id = request.user.id)
+        #get the number of devices connected to the user
+        user_device_connections = queryset.aggregate(sum=Sum('device_connections')).get('sum')
+
+        
         
         #print(notifications)
 
@@ -216,29 +224,36 @@ def delete_user(request, id):
 @login_required(login_url="/login/")
 #user profile
 def profile(request):
-    user = request.user
-    return render(request, "home/profile.html", {"user": user})
+    user = get_user_model().objects.get(id=request.user.id)
+
+    #if user doesnt have a profile, create one
+    profile = UserProfile.objects.get_or_create(user=user)
+    return render(request, "home/profile.html", {"user": profile})
+
+    # user = UserForm(instance=request.user)
+    # #get the user_profile by their id
+    # user_profile = ProfileForm(instance=request.user)
+    # return render(request, "home/profile.html", {"user": user_profile})
 
 
 #update profile
 def update_profile(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        profile_form = ProfileForm(request.POST, request.FILES,instance=request.user.profile )
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
-            profile_form.save()
+            #get the user_profile by their id
             messages.success(request, ('Your profile was successfully updated!'))
             return redirect('profile')
         else:
             messages.error(request, ('Please correct the error below.'))
+            print(user_form.errors.as_data())
+            print(profile_form.errors.as_data())
     else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
-    return render(request, 'home/profile.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+        user_form = UserForm(instance=request.user.profile)
+        profile_form = ProfileForm(instance=request.user)
+    return render(request, 'home/profile.html', {'user_form': user_form,'profile_form': profile_form})
 
 @login_required(login_url="/login/")
 def users_device_add(request):

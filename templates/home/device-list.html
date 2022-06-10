@@ -70,7 +70,7 @@
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_1"
                                                 class="toggle-switch-chec1"
-                                                onchange="updateStatus(this, '{{ item.id }}')">
+                                                onchange="updateStatus(this)">
                                                 
                                                 
                                             <label for="enable_1_{{ item.id }}"></label>
@@ -85,11 +85,13 @@
                                                 {% if item.enable_2 == 1 %}
                                                 checked
                                                 {% endif %}
-                                                id="enable_2_{{ item.id }}"
+                                                id="tgBTN2"
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_2"
                                                 class="toggle-switch-chec2"
-                                                onchange="updateStatus(this, '{{ item.id }}')">
+                                                onchange="updateStatus(this)">
+                                                
+                                                
                                             <label for="enable_2_{{ item.id }}"></label>
                                         </div>
 
@@ -102,13 +104,13 @@
                                                 {% if item.enable_3 == 1 %}
                                                 checked
                                                 {% endif %}
-                                                id="enable_3_{{ item.id }}"
+                                                id="tgBTN3"
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_3"
-                                                onchange="updateStatus(this, '{{ item.id }}')"
-
+                                                onchange="updateStatus(this)"
                                                 class="toggle-switch-chec3"
                                             >
+    
                                             <label for="enable_3_{{ item.id }}"></label>
                                         </div>
                                     </td>
@@ -124,8 +126,7 @@
                                                 id="enable_4_{{ item.id }}"
                                                 data-id="{{ item.id }}"
                                                 data-type="enable_4"
-                                                onchange="updateStatus(this, '{{ item.id }}')"
-
+                                                onchange="updateStatus(this)"
                                                 class="toggle-switch-chec4"
                                             >
     
@@ -311,11 +312,12 @@
 
     
 
-    function updateStatus(element , id) {
+    function updateStatus(element ) {
 
-        var id = $(element).data('id');     
+        var id = $(element).data('id');
+        console.log(id);    
         var type = $(element).data('type');
-        var url = "/device/update/" + id ;
+        // var url = "/device/update/" + id ;
 
 
     
@@ -323,9 +325,13 @@
 
         //get value of check box enable_1
         var enable_1 = $(".toggle-switch-chec1").is(':checked');
-        var enable_2 = $(".toggle-switch-chec2").is(':checked');
-        var enable_3 = $(".toggle-switch-chec3").is(':checked');
+        console.log(enable_1)
+        var enable_2 = $("#tgBTN2").is(":checked");
+        console.log(enable_2)
+        var enable_3 = $("#tgBTN3").is(':checked');
+        console.log(enable_3)
         var enable_4 = $(".toggle-switch-chec4").is(':checked');
+        console.log(enable_4)
        // do operations on only the targetted id
 
 
@@ -335,6 +341,7 @@
         if(type == 'enable_1')
         {
             if(enable_1 == true){
+                console.log('enable_1 is true')
                 //set only toogle switches that match the id of the clicked object to false
                 //only change the enable_2, enable_3 and enable_4 to false for the specific id
 
@@ -373,10 +380,11 @@
                             
            }
            else{
-            checkData['enable_1'] = false
-            checkData['enable_2'] = false
-            checkData['enable_3'] = false
-            checkData['enable_4'] = false
+               console.log("enable 1 is false")
+               checkData['enable_1'] = false
+               checkData['enable_2'] = false
+               checkData['enable_3'] = false
+               checkData['enable_4'] = false
            }
 
         }
@@ -422,65 +430,20 @@
                             
            }
            else{
-
-            checkData['enable_1'] = false
-            checkData['enable_2'] = false
-            checkData['enable_3'] = false
-            checkData['enable_4'] = false
+               console.log("Enable 2 is false")
+                checkData['enable_1'] = false
+                checkData['enable_2'] = false
+                checkData['enable_3'] = false
+                checkData['enable_4'] = false
            }
 
         }
      
-        // else if (type == 'enable_2')
-        // {
-        //     if(enable_2 == true){
-        //         console.log('enable_2');
-        //         $.each($(".toggle-switch-chec1"), function(index, value) {
-        //             if($(value).data('id') == id)
-        //             {
-        //                 $(value).prop('checked', false);
-        //                 //store the value in the data array
-        //                 checkData['enable_1'] = false;
-
-        //             }
-        //         });
-
-
-        //         checkData['enable_2'] = true;
-
-        //         $.each($(".toggle-switch-chec3"), function(index, value) {
-        //             if($(value).data('id') == id)
-        //             {
-        //                 $(value).prop('checked', false);
-        //                 //store the value in the data array
-        //                 checkData['enable_3'] = false;
-        //             }
-        //         });
-
-        //         $.each($(".toggle-switch-chec4"), function(index, value) {
-        //             if($(value).data('id') == id)
-        //             {
-        //                 $(value).prop('checked', false);
-        //                 //store the value in the data array
-        //                 checkData['enable_4'] = false;
-        //             }
-        //         });
-        //         //store the value in the data array
-
-       
-        //     }
-        //     else
-        //     {
-        //         checkData['enable_1'] = false
-        //         checkData['enable_2'] = false
-        //         checkData['enable_3'] = false
-        //         checkData['enable_4'] = false
-        //     }
-        // }
         else if (type == 'enable_3')
         {
+            console.log('third choice')
             if(enable_3 == true){
-                console.log('enable_3');
+                console.log('enable_3 is true');
                 $.each($(".toggle-switch-chec1"), function(index, value) {
                     if($(value).data('id') == id)
                     {
@@ -523,7 +486,7 @@
         else if (type == 'enable_4')
         {
             if(enable_4 == true){
-                console.log('enable_4');
+                console.log('enable_4 is true');
                 $.each($(".toggle-switch-chec1"), function(index, value) {
                     if($(value).data('id') == id)
                     {
