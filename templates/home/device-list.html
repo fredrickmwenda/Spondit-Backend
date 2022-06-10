@@ -164,12 +164,31 @@
                                         {% if request.user.normal_user or request.user.advanced_user %}                                       
                                             <div class="row">
                                                 <!--Check if user_devices queryset exists-->
+                                                <div class="col-md-6">
+                                                    <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                        <input type="hidden" name="_method" value="PUT"> 
+                                                        
+                                                        
+                                                        <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
+                                                    </form>  
+                                                </div>
+
+                                                <div class="col-md-6"> 
+                                                    <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            
+                                                        <input type="hidden" name="_method" value="PUT">
+                                                        
+                                                        <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
+                                                    </form>
+                                                </div>
 
 
 
                                                 
 
-                                                {% for i in user_devices %}                                                
+                                                <!-- {% for i in user_devices %}                                                
                                                     {% if item.id == i.device_name_id %}                                                   
                                                         {% if i.active == 1 %}
                                                             <div class="col-md-6">
@@ -233,7 +252,7 @@
                                                                 <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
                                                             </form>
                                                         </div> 
-                                                {% endfor %}
+                                                {% endfor %} -->
 
                                             </div>
                                         {% endif %}
