@@ -9,14 +9,14 @@
     <div class="container">
         <div class="page-header">
             <h1 class="page-title">
-                Devices List
+                Users List
             </h1>
         </div>
         <div class="row row-cards row-deck">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Devices</h3>
+                        <h3 class="card-title">Users</h3>
                     </div>
                     <div class="table-responsive">
                         <table class="table card-table table-vcenter text-nowrap datatable">
@@ -26,6 +26,7 @@
                                     <th>User Name</th>
                                     <th>Email</th>
                                     <th>User Type</th>
+                                    <th>Organisation</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                     <th></th>
@@ -42,6 +43,7 @@
 
 
 
+
                                     <td>{% if item.normal_user  %}
                                           Normal User
                                         {% elif item.advanced_user  %}
@@ -53,6 +55,10 @@
                                         {% else %}
                                         <span class="status-icon bg-warning"></span>
                                         {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {{ item.org }}
                                     </td>
 
                                     <td>{% if item.is_active %}
@@ -69,6 +75,7 @@
                                         <div class="dropdown">
                                             <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">Actions</button>
                                             <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" href="/users/edit/{{item.id}}"><i class="fe fe-edit"></i> Edit</a>
                                               <!-- <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-fw fa-check"></i> Approve</a>
                                               <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-fw fa-times"></i> Reject</a>
                                               <div class="dropdown-divider"></div> -->

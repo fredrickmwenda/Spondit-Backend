@@ -32,6 +32,10 @@ class Device(models.Model):
     lane_8 = models.CharField(_('Lane 8'), max_length=20, null=True, blank=True)
     enable_8 = models.BooleanField(_('Activate Lane 8'), default=False, blank=True)
     description = models.TextField(_('Description'), blank=True, max_length=255)
+    #latitude and longitude
+    lat = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
+    lng = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
+
     state = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     enable = models.BooleanField(_('Activate'), default=False, blank=True)
@@ -49,6 +53,23 @@ class Device(models.Model):
         
      
         super(Device, self).save(*args, **kwargs)
+
+    @property
+    def has_lane5(self):
+        return self.lane_5 is not None and self.lane_5 != ''
+
+    @property
+    def has_lane6(self):
+        return self.lane_6 is not None and self.lane_6 != ''
+    
+    @property
+    def has_lane7(self):
+        return self.lane_7 is not None and self.lane_7 != ''
+
+    @property
+    def has_lane8(self):
+        return self.lane_8 is not None and self.lane_8 != ''
+
 
     
 class DeviceImages(models.Model):

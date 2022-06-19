@@ -1,6 +1,6 @@
 from math import e
 from django.urls import path
-from .views import  connect_device, delete_device, device_add, device_list, device_edit, disconnect_device, enableState
+from .views import  connect_device, delete_device, device_add, device_list, device_edit, disconnect_device, enableState,changeLane
 from rest_framework_simplejwt import views as jwt_views
 
 urlpatterns = [
@@ -19,6 +19,9 @@ urlpatterns = [
 
     #update device enable_1, enable_2, enable_3, and enable_4 states
     path('enableState/<str:id>/', enableState, name='enableState'),
+
+    #change lanes for a device
+    path('device/changeLane/<str:id>/', changeLane, name='changeLane'),
 
 
 

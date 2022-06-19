@@ -30,8 +30,8 @@ class DeviceForm(forms.ModelForm):
             'description',
             'state',
             'city',
-            #'lat',
-           # 'lng',
+            'lat',
+            'lng',
         ]
 
         widgets = {
@@ -195,6 +195,9 @@ class DeviceForm(forms.ModelForm):
         return super(DeviceForm, self).get_initial_for_field(field, field_name, *args, **kwargs)
         # return super().get_initial_for_field(field, field_name)
 
+
+
+
 class DeviceField(forms.ModelForm):
     device_images = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))  
     class Meta:
@@ -202,3 +205,7 @@ class DeviceField(forms.ModelForm):
         fields = ['device_images']
 
 
+class DeviceLaneForm(forms.ModelForm):
+    class Meta:
+        model = Device
+        fields = ['lane_1', 'lane_2', 'lane_3', 'lane_4', 'lane_5', 'lane_6', 'lane_7', 'lane_8']

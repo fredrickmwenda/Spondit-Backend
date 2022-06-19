@@ -14,35 +14,24 @@ from django.template import loader
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.contrib.auth import get_user_model, logout
+from devices.views import device_add
 from .consumers import NotificationConsumer
-
 from devices.models import Device
-
 from .permissions import IsAdminUser, AdvancedUserManage
-
-from .serializers import DeviceDataSerializer, DeviceSerializer, LoginSerializer, RegistrationSerializer, UserDevicesSerializer, UsersSerializer
-
+from .serializers import DeviceDataSerializer, DeviceSerializer, LoginSerializer, RegistrationSerializer, UserDevicesSerializer, UsersSerializer, NotificationSerializer
 from .models import NotificationChannel, UserDevices, UserProfile
-
-from .forms import CreateUserDevice, CreateUsers, LoginForm, ProfileForm,  SignUpForm, User, UserForm
-
-
+from .forms import CreateUserDevice, CreateUsers, LoginForm, ProfileForm,  SignUpForm, UpdateUser, User, UserForm
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-
 from rest_framework.authtoken.models import Token
-
 from .authentication import create_access_token, create_refresh_token
-
 #RefreshToken
 from rest_framework_simplejwt.tokens import RefreshToken
-
-
 
 
 
@@ -79,7 +68,10 @@ def login_view(request):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             user = authenticate(email=email, password=password)
+            #check if user has a profile
+
             if user is not None:
+                #UserProfile.objects.get_or_create(user=user)
                 login(request, user)
                 return redirect("home")
             else:
@@ -89,16 +81,14 @@ def login_view(request):
 
     return render(request, "accounts/login.html", {"form": form, "msg": msg})
 
-
 def logout_view(request):
     logout(request)
     return redirect("/login")
 
-
 # After successfull login user is taken to homepage
 # @login_required(login_url= "/login/")
 def home(request):
-    msg = "Not authenticated "
+    msg = "Not authenticated"
     if request.user.is_authenticated:
         # get all users using the system
 
@@ -124,7 +114,7 @@ def home(request):
         #get the number of devices connected to the user
         user_device_connections = queryset.aggregate(sum=Sum('device_connections')).get('sum')
 
-        
+
         
         #print(notifications)
 
@@ -153,13 +143,11 @@ def home(request):
         })
     return render(request, "accounts/login.html") 
 
-
 @login_required(login_url="/login/")
 def notifications_view(request):
     user_notifications = NotificationChannel.objects.all().filter(user_id = request.user.id)
     notifications = NotificationChannel.objects.all().filter(user_id = request.user.id).count()
     return render(request, "home/notifications.html",{'user_notifications': user_notifications, 'notification_count': notifications})
-
 
 @login_required(login_url="/login/")
 def create_users(request):
@@ -192,9 +180,50 @@ def create_users(request):
     else:
         form = CreateUsers()
     
-    return render(request, "home/users-add.html", {"form": form, "msg": msg, "success": success})  
-    
-    
+    return render(request, "home/users-add.html", {"form": form, "msg": msg, "success": success})
+
+@login_required(login_url="/login/")
+#edit user
+def edit_users(request, id):
+    msg = None
+    success = False
+    user = get_object_or_404(get_user_model(), id=id)
+
+    initial = {
+        'full_name': user.full_name,
+        'email: ': user.email,
+        'organization': user.org,
+        'staff': user.staff,
+        'admin': user.admin,
+        'normal_user': user.normal_user,
+        'advanced_user': user.advanced_user,      
+    }
+    if request.method == "POST":
+        form = UpdateUser(request.POST or None)
+        # context['form']= form
+        if form.is_valid():
+            user.full_name = form.cleaned_data.get('full_name')
+            user.email = form.cleaned_data.get('email')
+            user.org = form.cleaned_data.get('org')
+            user.admin = form.cleaned_data.get('admin')
+            user.staff = form.cleaned_data.get('staff')
+            user.normal_user = form.cleaned_data.get('normal_user')
+            user.advanced_user = form.cleaned_data.get('advanced_user')
+            user.password = form.cleaned_data.get('password')
+            user.save()
+            
+            
+            msg = "User is updated"
+            return redirect('/users/list/')
+        else:
+            msg = 'Form is not valid'
+            print(form.errors.as_data())
+
+    else:
+        form = CreateUsers(instance=user, initial=initial)
+
+    return render(request, "home/users-edit.html", locals())
+
  
 @login_required(login_url="/login/")
 def users_list(request):
@@ -225,16 +254,14 @@ def delete_user(request, id):
 #user profile
 def profile(request):
     user = get_user_model().objects.get(id=request.user.id)
-
     #if user doesnt have a profile, create one
     profile = UserProfile.objects.get_or_create(user=user)
     return render(request, "home/profile.html", {"user": profile})
 
-    # user = UserForm(instance=request.user)
-    # #get the user_profile by their id
-    # user_profile = ProfileForm(instance=request.user)
-    # return render(request, "home/profile.html", {"user": user_profile})
-
+# user = UserForm(instance=request.user)
+# #get the user_profile by their id
+# user_profile = ProfileForm(instance=request.user)
+# return render(request, "home/profile.html", {"user": user_profile})
 
 #update profile
 def update_profile(request):
@@ -300,8 +327,6 @@ def users_device_add(request):
        
     return render(request, "home/user-devices.html", context_dict)
 
-
-
 @login_required(login_url="/login/")
 def users_device_list(request):
     """
@@ -312,22 +337,17 @@ def users_device_list(request):
     list = UserDevices.objects.all()
     return render(request, "home/users-device-list.html", locals())
 
-
-
 @login_required(login_url="/login/")
 def user_device_delete(request, id):
     user_device = UserDevices.objects.get(id=id)
     user_device.delete()
     return redirect('/users/list')    
 
-
 @login_required(login_url="/login/")
 def history_view(request):
     logs = LogEntry.objects.order_by('-action_time')[:20]
     logCount = LogEntry.objects.order_by('-action_time').count()
     return render(request, "home/history.html", {"logs":logs, "logCount":logCount})
-
-
 
 
 # APIViews
@@ -343,7 +363,6 @@ class DeviceListView(APIView):
         devices = Device.objects.all()
         serializer = DeviceSerializer(devices, many=True)
         return Response(serializer.data)
-
 class CurrentUserViewSet(APIView):
     #permission_class = (IsAuthenticated)
     queryset = User.objects.all()
@@ -354,7 +373,6 @@ def UserAvailable(request):
         specific_users = User.objects.filter(id=request.user.id)
         serializer = UsersSerializer(specific_users)
         return Response(serializer.data)
-
 class RegistrationAPIView(APIView):
     # Allow any user (authenticated or not) to hit this endpoint.
     permission_classes = [IsAdminUser]
@@ -371,7 +389,6 @@ class RegistrationAPIView(APIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 class LoginAPIView(APIView):
     permission_classes = (AllowAny,)
     #serializer_class = LoginSerializer
@@ -422,8 +439,7 @@ class LoginAPIView(APIView):
             else:
                 return Response({'error': 'Invalid credentials, not right password'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'error': 'Invalid credentials, wrong user'}, status=status.HTTP_400_BAD_REQUEST)
-    
+            return Response({'error': 'Invalid credentials, wrong user'}, status=status.HTTP_400_BAD_REQUEST)  
 # get the devices connected to a user
 class UserDevicesAPIView(APIView):
     serializer_class  = UserDevicesSerializer
@@ -480,20 +496,59 @@ class ChangeDeviceStatusAPIView(APIView):
     serializer_class = DeviceSerializer
     permission_class = (IsAuthenticated)
     def post(self, request):
-        # get user id from request body     
+        # get user id from request body
+        device_id = request.data.get('device_id', {})
         enable_1 = request.data.get('enable_1', {})
         enable_2 = request.data.get('enable_2', {})
         enable_3 = request.data.get('enable_3', {})
         enable_4 = request.data.get('enable_4', {})
+
+
+        Device.objects.filter(id=device_id).update(enable_1=enable_1, enable_2=enable_2, enable_3=enable_3, enable_4=enable_4)
         
-        #use serializer to save data
-        serializer = DeviceSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        # #use serializer to save data
+        # serializer = DeviceSerializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'success': 'Device Status is Changed'}, status=status.HTTP_201_CREATED)
 
-   
+
+class ChangeDeviceLanesAPIView(APIView):
+    serializer_class = DeviceSerializer
+    permission_class = (IsAuthenticated)
+    def post(self, request):
+        # get user id from request body
+        device_id = request.data.get('device_id', {})
+        lane_1 = request.data.get('lane_1', {})
+        lane_2 = request.data.get('lane_2', {})
+        lane_3 = request.data.get('lane_3', {})
+        lane_4 = request.data.get('lane_4', {})
+
+
+        Device.objects.filter(id=device_id).update(lane_1=lane_1, lane_2=lane_2, lane_3=lane_3, lane_4=lane_4)
+        
+        # #use serializer to save data
+        # serializer = DeviceSerializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save()
+
+        return Response({'success': 'Device Lane has been Changed'}, status=status.HTTP_201_CREATED)
+#send notification to user api
+class SendNotificationAPIView(APIView):
+    permission_class = (IsAuthenticated)
+    serializer_class = NotificationSerializer
+    #get the notification from the request body
+    def get(self, request):
+        # get notification according to user id
+        user_id = request.data.get('user_id', {})
+        notification = NotificationChannel.objects.filter(user=user_id).first()
+        serializer = NotificationSerializer(notification)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+        #send the data 
+
 
 
 

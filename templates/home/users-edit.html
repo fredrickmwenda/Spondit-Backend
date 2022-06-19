@@ -11,15 +11,16 @@
               <form action="" method="post" class="card">
                 {% csrf_token %}
                     <div class="card-header">
-                        <h3 class="card-title">Create User</h3>
+                        <h3 class="card-title">Edit User</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">                   
                             <div class="col-md-4">
                                 <div class="form-group">
                                 <label class="form-label">Fullname</label>
-                                <!-- <input type="text" class="form-control"  placeholder="User Fullname." name="full_name"> -->
-                                {{form.full_name}}
+                                
+                                <input type="text" class="form-control"  placeholder="User Fullname." name="full_name" value="{{user.full_name}}">
+                                <!-- {{form.full_name}} -->
                                 </div>
                             </div>
                             <!-- <div class="col-sm-6 col-md-6">
@@ -31,8 +32,8 @@
                             <div class="col-sm-6 col-md-4">
                                 <div class="form-group">
                                 <label class="form-label">Email address</label>
-                                <!-- <input type="email" class="form-control" placeholder="Email" name="'email"> -->
-                                {{form.email}}
+                                <input type="email" class="form-control" placeholder="Email" name="email" value="{{user.email}}">
+                                <!-- {{form.email}} -->
                                 </div>
                             </div>
 
@@ -40,7 +41,8 @@
                             <div class="col-sm-6 col-md-4">
                               <div class="form-group">
                               <label class="form-label">Organisation</label>
-                              {{form.org}}
+                              <input type="text" class="form-control" placeholder="Organisation" name="org" value="{{user.org}}">
+                              <!-- {{form.org}} -->
                              
                               </div>
                             </div>
@@ -63,22 +65,22 @@
                               <div class="form-label">User Type</div>
                               <div class="custom-controls-stacked">
                                 <label class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" class="custom-control-input" name="normal_user" value="true" id="normal-user" data-type="normal" onchange="updateUser(this)">
+                                  <input type="radio" class="custom-control-input" name="normal_user"  id="normal-user" data-type="normal" onchange="updateUser(this)" {% if user.normal_user == 1 %}checked{% endif %} ">
                                   <span class="custom-control-label">Normal User</span>
                                 </label>
                                 <label class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" class="custom-control-input" name="advanced_user" value="true" id="advanced-user" data-type="advanced" onchange="updateUser(this)">
+                                  <input type="radio" class="custom-control-input" name="advanced_user"  id="advanced-user" data-type="advanced" onchange="updateUser(this)" {% if user.advanced_user == 1 %}checked{% endif %}>
                                   <span class="custom-control-label">Advanced User</span>
                                 </label>
                                 {% if user.is_admin %}
                                 <label class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" class="custom-control-input" name="admin" value="true" id="admin-user" data-type="admin" onchange="updateUser(this)" >
+                                  <input type="radio" class="custom-control-input" name="admin" id="admin-user" data-type="admin" onchange="updateUser(this)"  {% if user.admin == 1 %}checked{% endif %}>
                                   <span class="custom-control-label">Admin</span>
                                 </label>
                   
 
                                 <label class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" class="custom-control-input" name="staff" value="true" id="staff-user" data-type="staff" onchange="updateUser(this)">
+                                  <input type="radio" class="custom-control-input" name="staff" value="{{user.staff}}" id="staff-user" data-type="staff" onchange="updateUser(this)" {% if user.staff == 1 %}checked{% endif %}>
                                   <span class="custom-control-label">Staff</span>
                                 </label>
                                 {% endif %}
@@ -100,17 +102,18 @@
                             <div class="col-sm-6 col-md-6">
                                 <div class="form-group">
                                 <label class="form-label">Password</label>
-                                {{form.password1}}
-                                <!-- <input type="password" class="form-control" placeholder="Password.." name="password1"> -->
+                                
+                                
+                                <input type="password" class="form-control" placeholder="Password.." name="password1">
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-6">
                                 <div class="form-group">
                                 <label class="form-label"> Confirm Password</label>
-                                <!-- <input type="password" class="form-control" placeholder=" Confirm Password.." name="password2"> -->
-                                {{form.password2}}
+                                <input type="password" class="form-control" placeholder=" Confirm Password.." name="password2"> 
+                               
                                 </div>
-                            </div>
+                            </div> 
             
 
 
@@ -118,7 +121,7 @@
                     </div>
                     <div class="card-footer text-right">
                         <div class="d-flex">                
-                            <button type="submit" class="btn btn-primary ml-auto">Save User</button>
+                            <button type="submit" class="btn btn-primary ml-auto">Edit User</button>
                         </div>
                     </div>
                 </form>

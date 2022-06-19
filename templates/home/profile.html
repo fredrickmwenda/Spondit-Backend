@@ -23,6 +23,15 @@
                   <p class="mb-4">
                     {{ request.user.email }}
                   </p>
+                  {% if request.user.normal_user == True %}
+                    <p>Normal User</p>
+                  {% elif request.user.advanced_user == True %}
+                    <p>Staff</p>
+                  {% elif request.user.admin == True %}
+                    <p>Admin</p>
+                  {% elif request.user.staff == True %}
+                    <p>Staff</p>
+                  {% endif %}
           
                 </div>
               </div>

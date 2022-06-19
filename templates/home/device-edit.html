@@ -59,13 +59,57 @@
                           <div class="col-md-5">                           
                               <label class="form-label">Enable Lane 3</label>
                               <label class="custom-switch" style="padding-top: 10px">
-                                <input type="checkbox" name="enable_3" class="custom-switch-input" {% if val.enable_2 == 2 %}checked{% endif %} id="custom-enable3">
+                                <input type="checkbox" name="enable_3" class="custom-switch-input" {% if val.enable_3 == 1 %}checked{% endif %} id="custom-enable3">
                                 <!-- <input type="checkbox" name="enable_3" class="custom-switch-input" id="customChange" value="{{val.enable_3}}"> -->
                                 <span class="custom-switch-indicator"></span>                            
                               </label>                                           
                           </div>                    
                         </div>
                       </div>
+
+                      {% if val.lane_5 != null %}
+                      <div class="form-group">                    
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label class="form-label">Lane 5</label>
+                            <input type="number" class="form-control" name="lane_5" value="{{val.lane_5}}">
+                          </div>
+
+                          
+                          <div class="col-md-5">                           
+                            <label class="form-label">Enable Lane 5</label>
+                            <label class="custom-switch" style="padding-top: 10px">
+                              <input type="checkbox" name="enable_5" class="custom-switch-input" {% if val.enable_5 == 1 %}checked{% endif %} id="custom-enable3">
+                              <!-- <input type="checkbox" name="enable_3" class="custom-switch-input" id="customChange" value="{{val.enable_3}}"> -->
+                              <span class="custom-switch-indicator"></span>                            
+                            </label>                                           
+                          </div>
+                        </div>
+                      </div>
+                      {% endif %} 
+
+                      {% if val.lane_7 != null %}
+                      <div class="form-group">                    
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label class="form-label">Lane 7</label>
+                            <input type="number" class="form-control" name="lane_7" value="{{val.lane_7}}">
+                          </div>
+
+                          
+                          <div class="col-md-5">                           
+                            <label class="form-label">Enable Lane 5</label>
+                            <label class="custom-switch" style="padding-top: 10px">
+                              <input type="checkbox" name="enable_7" class="custom-switch-input" {% if val.enable_7 == 1 %}checked{% endif %} id="custom-enable3">
+                              <!-- <input type="checkbox" name="enable_3" class="custom-switch-input" id="customChange" value="{{val.enable_3}}"> -->
+                              <span class="custom-switch-indicator"></span>                            
+                            </label>                                           
+                          </div>
+                        </div>
+                      </div>
+                      {% endif %}                     
+
+
                     
 
 
@@ -158,6 +202,48 @@
                           </div>                    
                         </div>
                       </div>
+
+                      {% if val.lane_6 != null %}
+                      <div class="form-group">                    
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label class="form-label">Lane 6</label>
+                            <input type="number" class="form-control" name="lane_6" value="{{val.lane_6}}">
+                          </div>
+
+                          
+                          <div class="col-md-5">                           
+                            <label class="form-label">Enable Lane 5</label>
+                            <label class="custom-switch" style="padding-top: 10px">
+                              <input type="checkbox" name="enable_6" class="custom-switch-input" {% if val.enable_6 == 1 %}checked{% endif %} id="custom-enable3">
+                              <!-- <input type="checkbox" name="enable_3" class="custom-switch-input" id="customChange" value="{{val.enable_3}}"> -->
+                              <span class="custom-switch-indicator"></span>                            
+                            </label>                                           
+                          </div>
+                        </div>
+                      </div>
+                      {% endif %}
+                      
+                      {% if item.lane_8 != null %}
+                      <div class="form-group">                    
+                        <div class="row">
+                          <div class="col-md-7">
+                            <label class="form-label">Lane 8</label>
+                            <input type="number" class="form-control" name="lane_8" value="{{val.lane_8}}">
+                          </div>
+
+                          
+                          <div class="col-md-5">                           
+                            <label class="form-label">Enable Lane 5</label>
+                            <label class="custom-switch" style="padding-top: 10px">
+                              <input type="checkbox" name="enable_8" class="custom-switch-input" {% if val.enable_8 == 1 %}checked{% endif %} id="custom-enable3">
+                              <!-- <input type="checkbox" name="enable_3" class="custom-switch-input" id="customChange" value="{{val.enable_3}}"> -->
+                              <span class="custom-switch-indicator"></span>                            
+                            </label>                                           
+                          </div>
+                        </div>
+                      </div>
+                      {% endif %}  
 
                       <div class="form-group">
                         <div class="form-label">Coordinates</div>

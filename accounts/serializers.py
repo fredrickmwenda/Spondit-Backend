@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from.models import UserDevices
+from .models import UserDevices, NotificationChannel
 
 from devices.models import Device
 from .forms import User
@@ -170,4 +170,9 @@ class DeviceDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDevices
         fields = ['user_detail','device_name', 'active', 'time_connected' ]
+        
 
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NotificationChannel
+        fields = ['user','title', 'message', 'created_at']

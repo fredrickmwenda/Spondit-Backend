@@ -14,7 +14,7 @@ from channels.layers import get_channel_layer
 
 
 class UserManager(BaseUserManager): 
-    def create_user(self, email, full_name, password=None, is_staff=False, is_admin=False, is_normaluser=False, is_advanceduser=False, is_active=True,):
+    def create_user(self, email, full_name,  password=None, is_staff=False, is_admin=False, is_normaluser=False, is_advanceduser=False, is_active=True,):
         """
         Creates and saves a User with the given email and password.
         """
@@ -42,7 +42,7 @@ class UserManager(BaseUserManager):
         user_obj.save(using=self._db)
         return user_obj
 
-    def create_customuser(self, email, full_name, password):
+    def create_customuser(self, email, full_name,org,password):
         """
         Creates and saves a staff user with the given email and password.
         """
@@ -51,6 +51,8 @@ class UserManager(BaseUserManager):
             full_name,
             password=password,
         )
+        #organisation
+        user.org = org
         user.staff = True
         user.full_name = full_name
         user.save(using=self._db)
@@ -65,6 +67,7 @@ class UserManager(BaseUserManager):
             full_name,
             password=password,
         )
+
         user.full_name = full_name
         user.staff = True
         user.admin = True
@@ -79,14 +82,14 @@ class User(AbstractBaseUser):
         unique=True,
     )
     full_name = models.CharField(max_length=255,blank=True, null=True)
+    org = models.CharField(max_length=255,blank=True, null=True)
     is_active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False) # a admin user; non super-user
     admin = models.BooleanField(default=False) # a superuser
     normal_user = models.BooleanField(default=False)
     advanced_user = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now=True)
- 
-    # notice the absence of a "Password field", that is built in.
+    date_joined = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     objects     =   UserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name'] # Email & Password are required by default.
@@ -130,7 +133,11 @@ class User(AbstractBaseUser):
     def is_admin(self):
         "Is the user a admin member?"
         return self.admin
-
+    
+    @property
+    def organisation(self):
+        "Is Organisation?"
+        return self.org
 
     @property
     def is_normaluser(self):
@@ -172,6 +179,10 @@ class UserDevices(models.Model):
     def inactive_device(self):
         return self.filter(active=False)
 
+    @property
+    #user is connected  helper with argument device_name
+    def is_connected(self, device_name):
+        return self.filter(device_name=device_name, active=True)
      #calculate time connected (in minutes)
      #get the time the device was connected
    
@@ -205,12 +216,7 @@ class UserDevices(models.Model):
 
     class Meta:
         ordering = ['-issue_date']
-
-    
-
-
-
-
+   
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile',default=False)   
     date_of_birth = models.DateField(blank=True, null=True)
@@ -244,10 +250,6 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return '%s' %(self.user)
 
-    # def create_profile(sender, **kwargs):
-    #     if kwargs["created"]:
-    #         user_profile = UserProfile.objects.create(user=kwargs["instance"])
-    # post_save.connect(create_profile, sender=User)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
@@ -257,9 +259,6 @@ class UserProfile(models.Model):
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save
-
-
-
 
 class NotificationChannel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
@@ -274,9 +273,6 @@ class NotificationChannel(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        # if not self.id:
-        #     self.created_at = timezone.now()
-        print('save called')
         channel_layer = get_channel_layer()
         notification_objs =NotificationChannel.objects.all().count()
         data = {'count': notification_objs, 'current_notification': self.message, 'title': self.title}
@@ -291,19 +287,4 @@ class NotificationChannel(models.Model):
         ordering = ['-created_at']
 
 
-# class msg(models.Model):
-#     """ Mqtt message model """
-#     time = models.DateTimeField(null=False)
-#     sn = models.IntegerField(null=False)
-#     imei = models.IntegerField(null=False)
-#     eth_mac = models.CharField(max_length=20, null=False)
-#     wifi_mac = models.CharField(max_length=20, null=False)
-#     temper = models.IntegerField(null=False)
-#     adc1 = models.SmallIntegerField(null=False)
-#     adc2 = models.SmallIntegerField(null=False)
-#     rs485 = models.SmallIntegerField(null=False)
-#     lora1 = models.SmallIntegerField(null=False)
-#     lora2 = models.SmallIntegerField(null=False)
 
-#     class Meta:
-#             ordering = ['time']

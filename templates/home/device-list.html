@@ -146,6 +146,17 @@
                                         <span class="status-icon bg-warning"></span>
                                         {% endif %}
                                     </td>
+
+                                    <td>
+                                        <!--<a href="" class="btn btn-secondary btn-sm">Edit</a>-->
+                                        {% if request.user.is_advanceduser  %}
+                                        <!--link top open modal -->
+                                        <a data-target="#modal-{{item.id}}" data-toggle="modal" class="btn btn-sm btn-secondary" id="">
+                                            <i class="fe fe-edit"></i>  Lanes
+                                        </a>
+
+                                        {% endif %}
+                                    </td>
                                     
                                     <td class="text-right">
                                         {% if request.user.is_admin %}
@@ -161,6 +172,9 @@
                                             </div>
                                         {% endif %}
 
+
+
+
                                         {% if request.user.normal_user or request.user.advanced_user %}                                       
                                             <div class="row">
                                                 <!--Check if user_devices queryset exists-->
@@ -170,7 +184,7 @@
                                                         <input type="hidden" name="_method" value="PUT"> 
                                                         
                                                         
-                                                        <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
+                                                        <input type="submit" class="btn btn-sm btn-primary" value="Connect"> 
                                                     </form>  
                                                 </div>
 
@@ -183,6 +197,15 @@
                                                         <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
                                                     </form>
                                                 </div>
+
+                                               <!-- call has_connected  helper function from UserDevices- Model-->
+                                                <!-- {% if user_devices == None %}
+                                                <p>here</p>
+                                                {% else %}
+                                                <p> not here</p>
+                                                {% endif %} -->
+
+
 
 
 
@@ -259,6 +282,123 @@
                                     </td>
                                     
                                 </tr>
+                                <!--Bootstrap Modal for changing lanes-->
+                                <div class="modal fade" id="modal-{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="modal-default" aria-hidden="true">
+                                    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h6 class="modal-title" id="modal-title-default">Change Lanes of device {{item.name}} </h6>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <!-- <span aria-hidden="true">×</span> -->
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>
+                                                    <!--form action to hit url changeLane-->
+                                                    <form action="/device/changeLane/{{item.id}}/" method="POST" id="device-change-lanes">
+                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                        <input type="hidden" name="_method" value="PUT">
+                                                        <!--rows with columns-->
+                                                        <div class="row">
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group ">
+                                                                    <label for="example-text-input" class="col-form-label">Lane 1</label>
+                                                                    <!--get the value of the lane according to id-->
+                                                                    <input class="form-control" type="text" value="{{item.lane_1}}" id="example-text-input" name="lane_1">
+                                                                    
+                                                                        
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="example-text-input" class="col-form-label">Lane 2</label>
+                                                                    <input class="form-control" type="text" value="{{item.lane_2}}" id="example-text-input" name="lane_2">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="example-text-input" class="col-form-label">Lane 3</label>
+                                                                    <input class="form-control" type="text" value="{{item.lane_3}}" id="example-text-input" name="lane_3">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="example-text-input" class="col-form-label">Lane 4</label>
+                                                                    <input class="form-control" type="text" value="{{item.lane_4}}" id="example-text-input" name="lane_4">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            {% if item.lane_5 != null %}
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="example-text-input" class="col-form-label">Lane 5</label>
+                                                                    <input class="form-control" type="text" value="{{item.lane_5}}" id="example-text-input" name="lane_5">
+
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                            {% if item.lane_6 != null %}
+
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="example-text-input" class="col-form-label">Lane 6</label>
+                                                                    <input class="form-control" type="text" value="{{item.lane_6}}" id="example-text-input" name="lane_6">
+                                                                </div>
+                                                            </div>                                                       
+                                                           {% endif %}
+                                                                                                                     
+                                                        </div>
+
+                                                        <div class="row">
+                                                            {% if item.lane_7 != null %}
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="example-text-input" class="col-form-label">Lane 7</label>
+                                                                    <input class="form-control" type="text" value="{{item.lane_7}}" id="example-text-input" name="lane_7">
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                            {% if item.lane_8 != null %}
+
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="example-text-input" class="col-form-label">Lane 8</label>
+                                                                    <input class="form-control" type="text" value="{{item.lane_8}}" id="example-text-input" name="lane_8">
+                                                                </div>
+                                                            </div>                                                       
+                                                           {% endif %}
+                                                                                                                     
+                                                        </div>
+
+                                                
+
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Close</button>
+                                                            <input type="submit" class="btn btn-primary" value="Save changes">
+                                                        </div>
+                                                    </form>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                                            
+
+
+
+
+
                                 {% endfor %}
 
 

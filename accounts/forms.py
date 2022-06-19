@@ -173,6 +173,14 @@ class CreateUsers(UserCreationForm):
                 "class": "form-control"
             }
         ))
+
+    org = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Organisation",
+                "class": "form-control"
+            }
+    ))
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
@@ -187,12 +195,52 @@ class CreateUsers(UserCreationForm):
                 "class": "form-control"
             }
         ))
+    
+    # admin = forms.BooleanField(
+    #     widget=forms.CheckboxInput(
+    #         attrs={
+    #             "placeholder": "Admin",
+    #             "class": "form-control"
+    #         }
+    #     ))
+    
+    # staff = forms.BooleanField(
+    #     widget=forms.CheckboxInput(
+    #         attrs={
+    #             "placeholder": "Staff",
+    #             "class": "form-control"
+    #         }
+    #     ))
+    
+    # normal_user = forms.BooleanField(
+    #     widget=forms.CheckboxInput(
+    #         attrs={
+    #             "placeholder": "Normal User",
+    #             "class": "form-control"
+    #         }
+    #     ))
+    
+    # advanced_user = forms.BooleanField(
+    #     widget=forms.CheckboxInput(
+    #         attrs={
+    #             "placeholder": "Advanced User",
+    #             "class": "form-control"
+    #         }
+    #     ))
+
 #     
 
 
     class Meta:
         model = User
-        fields = ('email','full_name',  'password1', 'password2', 'admin', 'staff', 'normal_user', 'advanced_user')
+        fields = ('email','full_name',  'password1', 'password2', 'admin', 'staff', 'normal_user', 'advanced_user', 'org')
+
+
+
+class UpdateUser(UserAdminChangeForm):
+    class Meta:
+        model = User
+        fields = '__all__'
 
 
 

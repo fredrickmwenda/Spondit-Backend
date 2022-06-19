@@ -76,22 +76,28 @@
                         <label class="form-label">Lane 3</label>
                         <input type="number" class="form-control" name="frequency_3" placeholder="Lane 3">
                       </div> -->
-<!-- 
+
                       <div class="form-group">
-                        <label class="form-label">Add Extra Frequencies</label>
-                        <select name="user" id="select-users" class="form-control custom-select">
-                          <option value="">Select Value</option>
-                          <option value="1" >1</option>
-                          <option value="2" >2</option>
-                          <option value="3" >3</option>
-                          <option value="4" >4</option>
+                        <label class="form-label">Add Extra Lanes</label>
+                        <!--Add lane 5, Lane 6, Lane 7, Lane 8-->
+                        <select class="form-control custom-select" name="extra_lanes" id="extra_lanes">
+                          <option value="">Select Extra Lanes</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
                         </select>
-                      </div> -->
+       
+
+                      </div>
+
+                      <!--Input area to append data-->
+
 
                       
-                      <!-- <div id="inputArea">
+                      <div id="inputArea">
 
-                      </div> -->
+                      </div> 
                       <div class="form-group">
                         <div class="form-label">Location</div>
                         <div class="row">
@@ -179,6 +185,20 @@
                         </div>
                       </div>
 
+                      <!--latitude-->
+                      <div class="form-group">
+                        <label class="form-label">Latitude</label>
+                        <input type="number" class="form-control" name="lat" placeholder="Latitude">
+                      </div>
+
+                      <!--longitude-->
+                      <div class="form-group">
+                        <label class="form-label">Longitude</label>
+                        <input type="number" class="form-control" name="lng" placeholder="Longitude">
+                      </div>
+
+
+
         
 
  
@@ -219,6 +239,40 @@
               
                       $('#select-beast').selectize({});
 
+                      $('#extra_lanes').change(function(){
+                        console.log("extra lanes changed");
+                        var extra_lanes = $('#extra_lanes').val();
+                        var inputArea = $('#inputArea');
+                        var input = '';
+                        for(var i = 0; i < extra_lanes; i++){
+                          var j = i*1+5;
+                          console.log(j);
+                          input += '<div class="form-group">';
+                          input += '<div class="row">'
+                          input += '<div class="col-md-6">';
+                          input += '<input type="number" class="form-control" name="lane_'+j+'" placeholder="Lane '+j+'">';
+                          input += '</div>';
+                          input += '<div class="col-md-6">';
+                          input += '<label class="form-label">Enable Lane '+j+'</label>';
+                          input += '<label class="custom-switch" style="padding-top: 10px">';
+                          input += '<input type="checkbox" name="enable_'+j+'" class="custom-switch-input switch-'+j+'" id="customChange'+j+'" data-type="enable_'+j+'" onchange="updateSwitch(this)">';
+                          input += '<span class="custom-switch-indicator"></span>';
+                          input += '</label>';
+                          input += '</div>';
+                          input += '</div>';
+                          input += '</div>';
+
+                          //append input to inputArea
+                          // inputArea.append(input);
+                        }
+                        //
+                        inputArea.html(input);
+  
+
+
+
+                      });
+
               
                       // $('#select-users').selectize({
                       //     render: {
@@ -237,17 +291,18 @@
                       //     }
                       // });
 
-                      $("#select-users").change(function () {
-                        var numInputs = $(this).val();
-                        $('#inputArea').html('');
-                        for (var i = 0; i < numInputs; i++)
-                        {
-                          var j = i*1+5;
-                          var $section =  $('<div class="form-group"><label  class="form-label">Lane  '+j+'</label><input type="number" name="frequency_'+j+' " class="form-control" required placeholder="Lane '+j+'"></div>');
-                          $("#inputArea").append($section);
+                      // $("#extra_lanes").change(function () {
+                      //   console.log("extra lanes changed");
+                      //   var numInputs = $(this).val();
+                      //   $('#inputArea').html('');
+                      //   for (var i = 0; i < numInputs; i++)
+                      //   {
+                      //     var j = i*1+5;
+                      //     var $section =  $('<div class="form-group"><label  class="form-label">Lane  '+j+'</label><input type="number" name="lane_'+j+' " class="form-control" required placeholder="Lane '+j+'"></div>');
+                      //     $("#inputArea").append($section);
                           
-                        }
-                      });
+                      //   }
+                      // });
 
   
               
@@ -344,6 +399,14 @@
         </div>
       </div>
     </div>
+
+
+
+
+
+
+
+
 
 
 {% endblock content %}
