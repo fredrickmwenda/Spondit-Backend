@@ -191,7 +191,24 @@ class UserDevices(models.Model):
 
 
 
-    #device connections
+    #check if device exists where device connection is greater than 0
+    def is_device_connected(self, device_name):
+        return self.filter(device_name=device_name, device_connections__gt=0)
+     #check if device exists where device connection is greater than 0
+     
+    #check if device exists
+   
+    def is_device_exists(self, device_name):
+        #return a queryset to check the device exists
+        return  UserDevices.objects.filter(device_name=device_name)
+    
+
+
+        
+     #check if device is active
+
+
+
 
         #set device connection to  0
 

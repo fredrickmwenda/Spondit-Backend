@@ -41,6 +41,10 @@
                                     <th>Lane 2</th>
                                     <th>Lane 3</th>
                                     <th>Lane 4</th>
+                                    <th>Lane 5</th>
+                                    <th>Lane 6</th>
+                                    <th>Lane 7</th>
+                                    <th>Lane 8</th>
                                     <th>State</th>
                                     <th>City</th>
 
@@ -51,7 +55,7 @@
                                 {% for item in list %}
                                 <tr>
                                     <td><span class="text-muted">{{ item.id }}</span></td>
-                                    <td><a href="invoice.html" class="text-inherit">{{ item.name }}</a></td>
+                                    <td><a href="#" class="text-inherit">{{ item.name }}</a></td>
                                    <td>
                                        {{ item.device_type }}
                                    </td>
@@ -134,6 +138,109 @@
                                         </div>
          
                                     </td>
+
+                                    <td>
+                                        {{ item.lane_5 }}
+                                        <!-- Toogle enable_4 switch -->
+                                        <!-- onchange update the status using a for-loop-->
+                                        {% if item.lane_5 != null %}
+                                        <div class="toggle-switch toggle-switch-success">
+                                            <input type="checkbox"
+                                                {% if item.enable_5 == 1 %}
+                                                checked
+                                                {% endif %}
+                                                id="tgBTN5"
+                                                data-id="{{ item.id }}"
+                                                data-type="enable_5"
+                                                onchange="updateStatus(this)"
+                                                class="toggle-switch-chec5"
+                                            >
+    
+                                            <label for="enable_5_{{ item.id }}"></label>
+                                            
+                                        </div>
+                                        {% endif %}
+      
+         
+                                    </td>
+                                    <td>
+                                        {{ item.lane_6 }}
+                                        <!-- Toogle enable_4 switch -->
+                                        <!-- onchange update the status using a for-loop-->
+                                        {% if item.lane_6 != null %}
+                                        <div class="toggle-switch toggle-switch-success">
+                                            <input type="checkbox"
+                                                {% if item.enable_6 == 1 %}
+                                                checked
+                                                {% endif %}
+                                                id="tgBTN6"
+                                                data-id="{{ item.id }}"
+                                                data-type="enable_6"
+                                                onchange="updateStatus(this)"
+                                                class="toggle-switch-chec6"
+                                            >
+    
+                                            <label for="enable_6_{{ item.id }}"></label>
+                                            
+                                        </div>
+                                        {% endif %}
+      
+         
+                                    </td>
+
+                                    <td>
+                                        {{ item.lane_7 }}
+                                        <!-- Toogle enable_4 switch -->
+                                        <!-- onchange update the status using a for-loop-->
+                                        {% if item.lane_7 != null %}
+                                        <div class="toggle-switch toggle-switch-success">
+                                            <input type="checkbox"
+                                                {% if item.enable_7 == 1 %}
+                                                checked
+                                                {% endif %}
+                                                id="tgBTN7"
+                                                data-id="{{ item.id }}"
+                                                data-type="enable_7"
+                                                onchange="updateStatus(this)"
+                                                class="toggle-switch-chec7"
+                                            >
+    
+                                            <label for="enable_7_{{ item.id }}"></label>
+                                            
+                                        </div>
+                                        {% endif %}
+      
+         
+                                    </td>
+
+
+                                    <td>
+                                        {{ item.lane_8 }}
+                                        <!-- Toogle enable_4 switch -->
+                                        <!-- onchange update the status using a for-loop-->
+                                        {% if item.lane_8 != null %}
+                                        <div class="toggle-switch toggle-switch-success">
+                                            <input type="checkbox"
+                                                {% if item.enable_8 == 1 %}
+                                                checked
+                                                {% endif %}
+                                                id="tgBTN8"
+                                                data-id="{{ item.id }}"
+                                                data-type="enable_8"
+                                                onchange="updateStatus(this)"
+                                                class="toggle-switch-chec8"
+                                            >
+    
+                                            <label for="enable_8_{{ item.id }}"></label>
+                                            
+                                        </div>
+                                        {% endif %}
+      
+         
+                                    </td>
+
+
+                                    
                                     <td>
                                         {{ item.city }}
                                     </td>
@@ -177,105 +284,33 @@
 
                                         {% if request.user.normal_user or request.user.advanced_user %}                                       
                                             <div class="row">
-                                                <!--Check if user_devices queryset exists-->
-                                                <div class="col-md-6">
-                                                    <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
-                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                                        <input type="hidden" name="_method" value="PUT"> 
-                                                        
-                                                        
-                                                        <input type="submit" class="btn btn-sm btn-primary" value="Connect"> 
-                                                    </form>  
-                                                </div>
-
-                                                <div class="col-md-6"> 
-                                                    <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
-                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-            
-                                                        <input type="hidden" name="_method" value="PUT">
-                                                        
-                                                        <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
-                                                    </form>
-                                                </div>
-
-                                               <!-- call has_connected  helper function from UserDevices- Model-->
-                                                <!-- {% if user_devices == None %}
-                                                <p>here</p>
-                                                {% else %}
-                                                <p> not here</p>
-                                                {% endif %} -->
+                                                <!--user_devices loop where if the device isnt connected return paragraph null-->
+                                                
+                                                   
+                                                  
+                   
+   
+                                     
+                       
+                                         
 
 
+                                                    
+                                                    <!--check if device name id is null-->
+                                                    
+
+                                                    
+                                                     
+                            
+
+  
 
 
 
                                                 
 
-                                                <!-- {% for i in user_devices %}                                                
-                                                    {% if item.id == i.device_name_id %}                                                   
-                                                        {% if i.active == 1 %}
-                                                            <div class="col-md-6">
-                                                                <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
-                                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                                                    <input type="hidden" name="_method" value="PUT"> 
-                                                                    
-                                                                    
-                                                                    <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
-                                                                </form>  
-                                                            </div>
+                   
 
-                                                            <div class="col-md-6"> 
-                                                                <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
-                                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                        
-                                                                    <input type="hidden" name="_method" value="PUT">
-                                                                    
-                                                                    <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
-                                                                </form>
-                                                            </div>
-                                                            {% else %}
-                                                            <div class="col-md-6">
-                                                                <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
-                                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                                                    <input type="hidden" name="_method" value="PUT"> 
-                                                                    <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
-                                                                </form>
-                                                            </div>
-
-                                                            <div class="col-md-6"> 
-                                                                <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
-                                                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                        
-                                                                    <input type="hidden" name="_method" value="PUT">
-                                                                    
-                                                                    <input type="submit" class="btn btn-sm btn-danger" value="Disconnected">        
-                                                                </form>
-                                                            </div> 
-
-                                                        {% endif %}
-                                                    {% endif %}
-
-                                                    {% empty %}
-                                                                                                            <div class="col-md-6">
-                                                            <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
-                                                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                                                <input type="hidden" name="_method" value="PUT"> 
-                                                                
-                                                                
-                                                                <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
-                                                            </form>  
-                                                        </div>
-
-                                                        <div class="col-md-6"> 
-                                                            <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
-                                                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                    
-                                                                <input type="hidden" name="_method" value="PUT">
-                                                                
-                                                                <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
-                                                            </form>
-                                                        </div> 
-                                                {% endfor %} -->
 
                                             </div>
                                         {% endif %}
@@ -484,13 +519,14 @@
 
         //get value of check box enable_1
         var enable_1 = $(".toggle-switch-chec1").is(':checked');
-        console.log(enable_1)
-        var enable_2 = $("#tgBTN2").is(":checked");
-        console.log(enable_2)
-        var enable_3 = $("#tgBTN3").is(':checked');
-        console.log(enable_3)
+        var enable_2 = $("#tgBTN2").is(":checked");     
+        var enable_3 = $("#tgBTN3").is(':checked');     
         var enable_4 = $(".toggle-switch-chec4").is(':checked');
-        console.log(enable_4)
+        var enable_5 = $("#tgBTN5").is(':checked'); 
+        var enable_6 = $("#tgBTN6").is(':checked'); 
+        var enable_7 = $("#tgBTN7").is(':checked');
+        var enable_8 = $("#tgBTN8").is(':checked'); 
+       
        // do operations on only the targetted id
 
 
@@ -683,6 +719,426 @@
                 checkData['enable_2'] = false
                 checkData['enable_3'] = false
                 checkData['enable_4'] = false
+            }
+        }
+
+        else if (type == 'enable_5')
+        {
+            if(enable_5 == true){
+                console.log('enable_5 is true');
+                $.each($(".toggle-switch-chec1"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //store the value in the data array
+                        checkData['enable_1'] = false;
+                    }
+                });
+
+                $.each($(".toggle-switch-chec2"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //store the value in the data array
+                        checkData['enable_2'] = false;
+                    }
+                });
+
+                $.each($(".toggle-switch-chec3"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_3'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_4'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec6"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_6'] = false;
+                        
+                    }
+                });
+
+
+                $.each($(".toggle-switch-chec7"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_7'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec8"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_8'] = false;
+                        
+                    }
+                });
+
+
+                //store the value in the data array
+                checkData['enable_5'] = true;
+            }
+            else
+            {
+                checkData['enable_1'] = false
+                checkData['enable_2'] = false
+                checkData['enable_3'] = false
+                checkData['enable_4'] = false
+                checkData['enable_5'] = false
+                checkData['enable_6'] = false
+                checkData['enable_7'] = false
+                checkData['enable_8'] = false
+
+
+
+
+            }
+        }
+
+        else if (type == 'enable_6')
+        {
+            if(enable_6 == true){
+                console.log('enable_6 is true');
+                $.each($(".toggle-switch-chec1"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //store the value in the data array
+                        checkData['enable_1'] = false;
+                    }
+                });
+
+                $.each($(".toggle-switch-chec2"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //store the value in the data array
+                        checkData['enable_2'] = false;
+                    }
+                });
+
+                $.each($(".toggle-switch-chec3"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_3'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_4'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_4'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec5"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_5'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec7"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_7'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec8"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_8'] = false;
+                        
+                    }
+                });
+
+
+                //store the value in the data array
+                checkData['enable_6'] = true;
+            }
+            else
+            {
+                checkData['enable_1'] = false
+                checkData['enable_2'] = false
+                checkData['enable_3'] = false
+                checkData['enable_4'] = false
+                checkData['enable_5'] = false
+                checkData['enable_6'] = false
+                checkData['enable_7'] = false
+                checkData['enable_8'] = false
+
+            }
+        }
+
+
+        else if (type == 'enable_7')
+        {
+            if(enable_7 == true){
+                console.log('enable_7 is true');
+                $.each($(".toggle-switch-chec1"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //store the value in the data array
+                        checkData['enable_1'] = false;
+                    }
+                });
+
+                $.each($(".toggle-switch-chec2"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //store the value in the data array
+                        checkData['enable_2'] = false;
+                    }
+                });
+
+                $.each($(".toggle-switch-chec3"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_3'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_4'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_4'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec5"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_5'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec6"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_6'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec8"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_8'] = false;
+                        
+                    }
+                });
+
+
+                //store the value in the data array
+                checkData['enable_7'] = true;
+            }
+            else
+            {
+                checkData['enable_1'] = false
+                checkData['enable_2'] = false
+                checkData['enable_3'] = false
+                checkData['enable_4'] = false
+                checkData['enable_5'] = false
+                checkData['enable_6'] = false
+                checkData['enable_7'] = false
+                checkData['enable_8'] = false
+
+            }
+        }
+
+        else if (type == 'enable_8')
+        {
+            if(enable_8 == true){
+                console.log('enable_8 is true');
+                $.each($(".toggle-switch-chec1"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //store the value in the data array
+                        checkData['enable_1'] = false;
+                    }
+                });
+
+                $.each($(".toggle-switch-chec2"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //store the value in the data array
+                        checkData['enable_2'] = false;
+                    }
+                });
+
+                $.each($(".toggle-switch-chec3"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_3'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_4'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec4"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_4'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec5"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_5'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec6"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_6'] = false;
+                        
+                    }
+                });
+
+                $.each($(".toggle-switch-chec7"), function(index, value) {
+                    if($(value).data('id') == id)
+                    {
+                        $(value).prop('checked', false);
+                        //subsscribe to the topic
+                        //store the value in the data array
+                        checkData['enable_7'] = false;
+                        
+                    }
+                });
+
+
+
+
+                //store the value in the data array
+                checkData['enable_8'] = true;
+            }
+            else
+            {
+                checkData['enable_1'] = false
+                checkData['enable_2'] = false
+                checkData['enable_3'] = false
+                checkData['enable_4'] = false
+                checkData['enable_5'] = false
+                checkData['enable_6'] = false
+                checkData['enable_7'] = false
+                checkData['enable_8'] = false
+
             }
         }
         console.log(checkData);

@@ -57,20 +57,28 @@ def device_add(request):
             device_type = form.cleaned_data.get('device_type')
             device_id = form.cleaned_data.get('device_id')
             lane_1 = form.cleaned_data.get('lane_1')
+            lane1_name = form.cleaned_data.get('lane1_name')
             enable_1 = form.cleaned_data.get('enable_1')
             lane_2 = form.cleaned_data.get('lane_2')
+            lane2_name = form.cleaned_data.get('lane2_name')
             enable_2 = form.cleaned_data.get('enable_2')
             lane_3 = form.cleaned_data.get('lane_3')
+            lane3_name = form.cleaned_data.get('lane3_name')
             enable_3 = form.cleaned_data.get('enable_3')
             lane_4 = form.cleaned_data.get('lane_4')
+            lane4_name = form.cleaned_data.get('lane4_name')
             enable_4 = form.cleaned_data.get('enable_4')
             lane_5 = form.cleaned_data.get('lane_5')
+            lane5_name = form.cleaned_data.get('lane5_name')
             enable_5 = form.cleaned_data.get('enable_5')
             lane_6 = form.cleaned_data.get('lane_6')
+            lane6_name = form.cleaned_data.get('lane6_name')
             enable_6 = form.cleaned_data.get('enable_6')
             lane_7 = form.cleaned_data.get('lane_7')
+            lane7_name = form.cleaned_data.get('lane7_name')
             enable_7 = form.cleaned_data.get('enable_7')
             lane_8 = form.cleaned_data.get('lane_8')
+            lane8_name = form.cleaned_data.get('lane8_name')
             enable_8 = form.cleaned_data.get('enable_8')
             description= form.cleaned_data.get('description')
             state = form.cleaned_data.get('state')
@@ -90,6 +98,8 @@ def device_add(request):
             lane_1 = lane_1, enable_1 = enable_1, lane_2 = lane_2, enable_2 = enable_2, lane_3 = lane_3, enable_3 = enable_3, 
             lane_4 = lane_4, enable_4 = enable_4,
             lane_5=lane_5, enable_5=enable_5, lane_6 =lane_6, enable_6=enable_6, lane_7=lane_7, enable_7=enable_7, lane_8=lane_8, enable_8=enable_8,
+            lane1_name=lane1_name,lane2_name=lane2_name,lane3_name=lane3_name,lane4_name=lane4_name,lane5_name=lane5_name,lane6_name=lane6_name,
+            lane7_name=lane7_name,lane8_name=lane8_name,
             description = description, state = state, city = city,
             lat = latitude, lng = longitude, 
              enable = enable, 
@@ -140,10 +150,42 @@ def device_list(request):
     device_list = True
     #dont show deleted devices
     list = Device.objects.all()
-    #show all userdevices for the user
-    user_devices = UserDevices.objects.filter(user_detail_id=request.user)
 
-    context = {'list': list, 'user_devices': user_devices}
+    #count of 
+    #show all userdevices for the user
+    
+    user_devices = UserDevices.objects.filter(user_detail_id=request.user, device_name_id=Device.objects.all())
+
+    # if not user_devices:
+    #     user_devices = None
+
+    #count of user devices
+    user_devices_count = user_devices.count()
+
+
+    #use is_device_exist function from UserDevices model
+    #to check if the device is already added to the user
+    #if the device is already added to the user, then show the delete button
+    #if the device is not added to the user, then show the add button
+    if user_devices:
+        for device in user_devices:
+            device.is_device_exist = UserDevices.is_device_exists(request.user, device.device_name)
+            print(device.is_device_exist)
+
+    
+
+
+        
+    
+
+
+
+
+ 
+
+    # if a user doesnt exist in UserDevices 
+
+    context = {'list': list, 'user_devices': user_devices, 'user_devices_count': user_devices_count}
     
 
     return render(request, "home/device-list.html", context)

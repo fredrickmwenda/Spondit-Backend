@@ -1,4 +1,5 @@
 
+from base64 import urlsafe_b64decode
 from os import access
 from re import U
 from urllib import response
@@ -32,6 +33,13 @@ from rest_framework.authtoken.models import Token
 from .authentication import create_access_token, create_refresh_token
 #RefreshToken
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from django.contrib.auth.forms import PasswordResetForm
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail, BadHeaderError
+
 
 
 
@@ -85,6 +93,51 @@ def logout_view(request):
     logout(request)
     return redirect("/login")
 
+
+def password_reset_request(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        print(form)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            print(email)
+            associated_user = User.objects.filter(email=email)
+            if associated_user.exists():
+                for user in associated_user:
+                    subject = 'Password Reset Request'
+                    email_message_template = 'accounts/password/password_reset_email.txt'
+                    # message = 'Please click the link below to reset your password: \n'
+                    # message += 'http://localhost:8000/reset-password/' + str(user.id)
+                    email_details =  {
+                        'email': user.email,
+                        'name': 'IOT Manager',
+                        'uid': urlsafe_base64_encode(str(user.id).encode('utf-8')),
+                        'user': user,
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http',
+                        'domain': 'localhost:8000',
+
+                    }
+                    email = loader.render_to_string(email_message_template, email_details)
+                    try:
+                        send_mail(subject, email, 'admin@example.com', [user.email], fail_silently=False)
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+                return(HttpResponse('Success! Please check your email for a link to reset your password.'))
+                    
+            else:
+                messages.error(request, ('No user with this email address exists.'))
+                print('No user with this email address exists.')
+                return redirect('password_reset_request')
+        else:
+            print(form.errors.as_data())
+            messages.error(request, ('Invalid email address.'))
+            
+            return redirect('password_reset')        
+    else:
+        form = PasswordResetForm()
+        print(form)
+        return render(request, 'accounts/password/password_reset.html', context={'form': form})
 # After successfull login user is taken to homepage
 # @login_required(login_url= "/login/")
 def home(request):
@@ -335,6 +388,7 @@ def users_device_list(request):
     """
     users_list = True
     list = UserDevices.objects.all()
+    
     return render(request, "home/users-device-list.html", locals())
 
 @login_required(login_url="/login/")

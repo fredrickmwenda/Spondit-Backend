@@ -34,13 +34,18 @@
 
                       <div class="form-group">                    
                         <div class="row">
-                          <div class="col-md-7">
-                            <label class="form-label">Lane 1</label>
+                          <div class="col-md-5">
+                            <label class="form-label">Lane1 Name</label>
+                            <input type="text" class="form-control" name="lane1_name" placeholder="Lane 1">
+                          </div>
+
+                          <div class="col-md-4">
+                            <label class="form-label">Lane1 Data</label>
                             <input type="number" class="form-control" name="lane_1" placeholder="Lane 1">
                           </div>
 
-                          <div class="col-md-5">                           
-                              <label class="form-label">Enable Lane 1</label>
+                          <div class="col-md-3">                           
+                              <label class="form-label">Enable L1</label>
                               <label class="custom-switch" style="padding-top: 10px">
                                 <!--custom switch input-->
                                 <input type="checkbox" name="enable_1" class="custom-switch-input switch-1" id="customChange1" data-type="enable_1" onchange="updateSwitch(this)" >
@@ -53,13 +58,17 @@
 
                       <div class="form-group">                    
                         <div class="row">
-                          <div class="col-md-7">
-                            <label class="form-label">Lane 3</label>
+                          <div class="col-md-5">
+                            <label class="form-label">Lane3 Name</label>
+                            <input type="text" class="form-control" name="lane3_name" placeholder="Lane 3">
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label">Lane3 Data</label>
                             <input type="number" class="form-control" name="lane_3" placeholder="Lane 3">
                           </div>
 
-                          <div class="col-md-5">                           
-                              <label class="form-label">Enable Lane 3</label>
+                          <div class="col-md-3">                           
+                              <label class="form-label">Enable L3</label>
                               <label class="custom-switch" style="padding-top: 10px">
                                 <input type="checkbox" name="enable_3" class="custom-switch-input switch-2" id="customChange3" data-type="enable_3" onchange="updateSwitch(this)">
                                 <span class="custom-switch-indicator"></span>                            
@@ -151,13 +160,17 @@
                       
                       <div class="form-group">                    
                         <div class="row">
-                          <div class="col-md-7">
-                            <label class="form-label">Lane 2</label>
+                          <div class="col-md-5">
+                            <label class="form-label">Lane2 Name</label>
+                            <input type="text" class="form-control" name="lane2_name" placeholder="Lane 2">
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label">Lane2 Data</label>
                             <input type="number" class="form-control" name="lane_2" placeholder="Lane 2">
                           </div>
 
-                          <div class="col-md-5">                           
-                              <label class="form-label">Enable Lane 2</label>
+                          <div class="col-md-3">                           
+                              <label class="form-label">Enable L2</label>
                               <label class="custom-switch" style="padding-top: 10px">
                               <!--custom switch input with onchange function-->
                                 <input type="checkbox" name="enable_2" class="custom-switch-input switch-3" id="customChange2" data-type="enable_2" onchange="updateSwitch(this)">
@@ -169,13 +182,17 @@
                       </div>
                       <div class="form-group">                    
                         <div class="row">
-                          <div class="col-md-7">
-                            <label class="form-label">Lane 4</label>
+                          <div class="col-md-5">
+                            <label class="form-label">Lane4 Name</label>
+                            <input type="text" class="form-control" name="lane4_name" placeholder="Lane 4">
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label">Lane4 Data</label>
                             <input type="number" class="form-control" name="lane_4" placeholder="Lane 4">
                           </div>
 
-                          <div class="col-md-5">                           
-                              <label class="form-label">Enable Lane 4</label>
+                          <div class="col-md-3">                           
+                              <label class="form-label">Enable L4</label>
                               <label class="custom-switch" style="padding-top: 10px">
 
                                 <input type="checkbox" name="enable_2" class="custom-switch-input switch-4" id="customChange4" data-type="enable_4" onchange="updateSwitch(this)" >
@@ -249,11 +266,16 @@
                           console.log(j);
                           input += '<div class="form-group">';
                           input += '<div class="row">'
-                          input += '<div class="col-md-6">';
-                          input += '<input type="number" class="form-control" name="lane_'+j+'" placeholder="Lane '+j+'">';
+                          input += '<div class="col-md-5">';
+                          input += '<label class="form-label">Lane'+j+' Name</label>';
+                          input += '<input type="text" class="form-control" name="lane'+j+'_name" placeholder="Lane '+j+'">';                        
                           input += '</div>';
-                          input += '<div class="col-md-6">';
-                          input += '<label class="form-label">Enable Lane '+j+'</label>';
+                          input += '<div class="col-md-4">';
+                          input += '<label class="form-label">Lane'+j+' Data</label>';
+                          input += '<input type="number" class="form-control" name="lane_'+j+'" placeholder="Lane '+j+'">';                       
+                          input += '</div>';
+                          input += '<div class="col-md-3">';
+                          input += '<label class="form-label">Enable L'+j+'</label>';
                           input += '<label class="custom-switch" style="padding-top: 10px">';
                           input += '<input type="checkbox" name="enable_'+j+'" class="custom-switch-input switch-'+j+'" id="customChange'+j+'" data-type="enable_'+j+'" onchange="updateSwitch(this)">';
                           input += '<span class="custom-switch-indicator"></span>';
@@ -261,6 +283,8 @@
                           input += '</div>';
                           input += '</div>';
                           input += '</div>';
+
+                          
 
                           //append input to inputArea
                           // inputArea.append(input);

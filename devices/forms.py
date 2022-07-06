@@ -12,20 +12,28 @@ class DeviceForm(forms.ModelForm):
             'device_type',
             'device_id',
             'lane_1',
+            'lane1_name',
             'enable_1',
             'lane_2',
+            'lane2_name',
             'enable_2',
             'lane_3',
+            'lane3_name',
             'enable_3',
             'lane_4',
+            'lane4_name',
             'enable_4',
             'lane_5',
+            'lane5_name',
             'enable_5',
             'lane_6',
+            'lane6_name',
             'enable_6',
             'lane_7',
+            'lane7_name',
             'enable_7',
             'lane_8',
+            'lane8_name',
             'enable_8',
             'description',
             'state',
@@ -53,6 +61,12 @@ class DeviceForm(forms.ModelForm):
                 }
             ),
 
+            'lane1_name': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+
             'enable_1': forms.CheckboxInput(
                 attrs={
                     'class': 'form-control',
@@ -61,6 +75,12 @@ class DeviceForm(forms.ModelForm):
             ),
 
             'lane_2': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+
+            'lane2_name': forms.TextInput(
                 attrs={
                     'class': 'form-control'
                 }
@@ -77,6 +97,12 @@ class DeviceForm(forms.ModelForm):
                     'class': 'form-control'
                 }
             ),
+
+            'lane3_name': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
             'enable_3': forms.CheckboxInput(
                 attrs={
                     'class': 'form-control',
@@ -85,6 +111,11 @@ class DeviceForm(forms.ModelForm):
             ),
 
             'lane_4': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+            'lane4_name': forms.TextInput(
                 attrs={
                     'class': 'form-control'
                 }
@@ -100,6 +131,11 @@ class DeviceForm(forms.ModelForm):
                     'class': 'form-control'
                 }
             ),
+            'lane5_name': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
             'enable_5': forms.CheckboxInput(
                 attrs={
                     'class': 'form-control',
@@ -107,6 +143,11 @@ class DeviceForm(forms.ModelForm):
                 }
             ),
             'lane_6': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+            'lane6_name': forms.TextInput(
                 attrs={
                     'class': 'form-control'
                 }
@@ -122,6 +163,11 @@ class DeviceForm(forms.ModelForm):
                     'class': 'form-control'
                 }
             ),
+            'lane7_name': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
             'enable_7': forms.CheckboxInput(
                 attrs={
                     'class': 'form-control',
@@ -129,6 +175,11 @@ class DeviceForm(forms.ModelForm):
                 }
             ),
             'lane_8': forms.TextInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+            'lane8_name': forms.TextInput(
                 attrs={
                     'class': 'form-control'
                 }
