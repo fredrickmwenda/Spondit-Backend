@@ -287,7 +287,17 @@
                                                 <!--user_devices loop where if the device isnt connected return paragraph null-->
                                                 
                                                    
-                                                  
+                                                                                                  <!--Check if user_devices queryset exists-->
+                                                <div class="col-md-6">
+                                                    <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                                        <input type="hidden" name="_method" value="PUT"> 
+
+
+                                                        <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
+                                                        <input type="submit" class="btn btn-sm btn-primary" value="Connect"> 
+                                                    </form>  
+                                                </div>
                    
    
                                      
