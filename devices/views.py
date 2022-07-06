@@ -160,17 +160,17 @@ def device_list(request):
     #     user_devices = None
 
     #count of user devices
-    user_devices_count = user_devices.count()
+    # user_devices_count = user_devices.count()
 
 
     #use is_device_exist function from UserDevices model
     #to check if the device is already added to the user
     #if the device is already added to the user, then show the delete button
     #if the device is not added to the user, then show the add button
-    if user_devices:
-        for device in user_devices:
-            device.is_device_exist = UserDevices.is_device_exists(request.user, device.device_name)
-            print(device.is_device_exist)
+    # if user_devices:
+    #     for device in user_devices:
+    #         device.is_device_exist = UserDevices.is_device_exists(request.user, device.device_name)
+    #         print(device.is_device_exist)
 
     
 
@@ -185,7 +185,7 @@ def device_list(request):
 
     # if a user doesnt exist in UserDevices 
 
-    context = {'list': list, 'user_devices': user_devices, 'user_devices_count': user_devices_count}
+    context = {'list': list, 'user_devices': user_devices}
     
 
     return render(request, "home/device-list.html", context)
