@@ -41,7 +41,9 @@ from django.utils.encoding import force_bytes
 from django.core.mail import send_mail, BadHeaderError
 
 
-
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 
 # Create your views here.
 # User = get_user_model()
@@ -604,7 +606,15 @@ class SendNotificationAPIView(APIView):
         #send the data 
 
 
-
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'accounts/password/password_reset.html'
+    email_template_name = 'accounts/password/password_reset_email.html'
+    subject_template_name = 'accounts/password/password_reset_subject'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('home')
 
 
 

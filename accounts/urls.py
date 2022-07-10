@@ -1,8 +1,9 @@
 from xml.etree.ElementInclude import include
 from django.urls import path,  re_path
-from .views import ChangeDeviceStatusAPIView, CurrentUserViewSet, DeviceListView, DisconnectDeviceAPIView, ChangeDeviceLanesAPIView, LoginAPIView, UserDevicesAPIView, SendNotificationAPIView, create_users, edit_users, history_view, login_view, logout_view, notifications_view, profile,   register_user, home, update_profile, users_device_add, users_device_list, users_list, password_reset_request
+from .views import ChangeDeviceStatusAPIView, CurrentUserViewSet, DeviceListView, DisconnectDeviceAPIView, ChangeDeviceLanesAPIView, LoginAPIView, UserDevicesAPIView, SendNotificationAPIView, create_users, edit_users, history_view, login_view, logout_view, notifications_view, profile,   register_user, home, update_profile, users_device_add, users_device_list, users_list, password_reset_request,ResetPasswordView
 from django.contrib.auth.views import LogoutView
 from rest_framework_simplejwt import views as jwt_views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('login/', login_view, name="login"),
@@ -38,10 +39,11 @@ urlpatterns = [
     path('profile/add', profile, name="profile_add"),
     path('profile/edit', update_profile, name="profile_edit"),
 
-
-   path("password_reset", password_reset_request, name="password_reset")    
+    path('password-reset/', ResetPasswordView.as_view(), name='password_reset'), 
    
- 
+    path('password-reset-confirm/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='accounts/password/password_reset_confirm.html'),name='password_reset_confirm'),
+
+    path('password-reset-complete/',auth_views.PasswordResetCompleteView.as_view(template_name='accounts/password/password_reset_complete.html'),name='password_reset_complete'),
 
 
 
