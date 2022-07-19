@@ -60,7 +60,8 @@
                                        {{ item.device_type }}
                                    </td>
                                     <td>
-                                        {{ item.lane_1 }}
+                                        {{item.lane1_name}}
+                                        |{{ item.lane_1 }}
                                         <!-- Toogle switch for enable_1 -->
                                         <!-- If enable_1 is -->
                                         
@@ -82,7 +83,8 @@
                                         </div>
                                     </td>
                                     <td>
-                                        {{ item.lane_2 }}
+                                        {{item.lane2_name}}
+                                        |{{ item.lane_2 }}
                                         <div class="toogle-switch toogle-switch-success">
                                             <!-- Toogle switch for enable_2-->
                                             <input type="checkbox"
@@ -101,7 +103,8 @@
 
                                     </td>
                                     <td>
-                                        {{ item.lane_3 }}
+                                        {{item.lane3_name}}
+                                        |{{ item.lane_3 }}
                                          <!-- Toogle enable_3 switch  and on change update the status to the database-->                                                                           
                                         <div class="toggle-switch toggle-switch-success">
                                             <input type="checkbox"
@@ -119,7 +122,8 @@
                                         </div>
                                     </td>
                                     <td>
-                                        {{ item.lane_4 }}
+                                        {{item.lane4_name}}
+                                        |{{ item.lane_4 }}
                                         <!-- Toogle enable_4 switch -->
                                         <!-- onchange update the status using a for-loop-->
                                         <div class="toggle-switch toggle-switch-success">
@@ -140,10 +144,12 @@
                                     </td>
 
                                     <td>
-                                        {{ item.lane_5 }}
+                                        
                                         <!-- Toogle enable_4 switch -->
                                         <!-- onchange update the status using a for-loop-->
                                         {% if item.lane_5 != null %}
+                                        {{ item.lane5_name }}
+                                        |{{ item.lane_5 }}
                                         <div class="toggle-switch toggle-switch-success">
                                             <input type="checkbox"
                                                 {% if item.enable_5 == 1 %}
@@ -164,10 +170,12 @@
          
                                     </td>
                                     <td>
-                                        {{ item.lane_6 }}
+                                        
                                         <!-- Toogle enable_4 switch -->
                                         <!-- onchange update the status using a for-loop-->
                                         {% if item.lane_6 != null %}
+                                        {{ item.lane6_name }}
+                                        |{{ item.lane_6 }}
                                         <div class="toggle-switch toggle-switch-success">
                                             <input type="checkbox"
                                                 {% if item.enable_6 == 1 %}
@@ -189,10 +197,12 @@
                                     </td>
 
                                     <td>
-                                        {{ item.lane_7 }}
+                                        
                                         <!-- Toogle enable_4 switch -->
                                         <!-- onchange update the status using a for-loop-->
                                         {% if item.lane_7 != null %}
+                                        {{ item.lane7_name }}
+                                        |{{ item.lane_7 }}
                                         <div class="toggle-switch toggle-switch-success">
                                             <input type="checkbox"
                                                 {% if item.enable_7 == 1 %}
@@ -215,10 +225,12 @@
 
 
                                     <td>
-                                        {{ item.lane_8 }}
+                                        
                                         <!-- Toogle enable_4 switch -->
                                         <!-- onchange update the status using a for-loop-->
                                         {% if item.lane_8 != null %}
+                                        {{ item.lane8_name }}
+                                        |{{ item.lane_8 }}
                                         <div class="toggle-switch toggle-switch-success">
                                             <input type="checkbox"
                                                 {% if item.enable_8 == 1 %}

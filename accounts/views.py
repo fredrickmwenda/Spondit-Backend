@@ -1,29 +1,20 @@
 
-from base64 import urlsafe_b64decode
-from os import access
-from re import U
-from urllib import response
-from django import template
-from django.shortcuts import render, redirect
-from django.contrib import messages 
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.models import LogEntry, DELETION, CHANGE, ADDITION
-from django.contrib.contenttypes.models import ContentType
-from django.db.models import Sum
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
-from django.contrib.auth import authenticate, login
-from django.urls import reverse
-from django.contrib.auth import get_user_model, logout
+# from base64 import urlsafe_b64decode
+# from os import access
+# from re import U
+# from urllib import response
+# from django import template
+
+
 from devices.views import device_add
 from .consumers import NotificationConsumer
 from devices.models import Device
 from .permissions import IsAdminUser, AdvancedUserManage
-from .serializers import DeviceDataSerializer, DeviceSerializer, LoginSerializer, RegistrationSerializer, UserDevicesSerializer, UsersSerializer, NotificationSerializer
+from .serializers import ChangePasswordSerializer, DeviceDataSerializer, DeviceSerializer, LoginSerializer, RegistrationSerializer, UserDevicesSerializer, UsersSerializer, NotificationSerializer
 from .models import NotificationChannel, UserDevices, UserProfile
 from .forms import CreateUserDevice, CreateUsers, LoginForm, ProfileForm,  SignUpForm, UpdateUser, User, UserForm
-from django.shortcuts import get_object_or_404, redirect
-from rest_framework import viewsets
+
+from rest_framework import viewsets, generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
@@ -31,19 +22,30 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from .authentication import create_access_token, create_refresh_token
-#RefreshToken
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from django.contrib.auth.forms import PasswordResetForm
+
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
+# from django.utils.encoding import force_bytes
 from django.core.mail import send_mail, BadHeaderError
-
-
-from django.urls import reverse_lazy
+from django.contrib import messages 
+from django.contrib.admin.models import LogEntry, DELETION, CHANGE, ADDITION
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Sum
+from django.dispatch import receiver
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy, reverse
+from django.template import loader
+from django_rest_passwordreset.signals import reset_password_token_created
+
+
 
 # Create your views here.
 # User = get_user_model()
@@ -603,7 +605,61 @@ class SendNotificationAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-        #send the data 
+        #send the data
+
+#password reset api
+class ChangePasswordView(generics.UpdateAPIView):
+    """
+    An endpoint for changing password.
+    """
+    serializer_class = ChangePasswordSerializer
+    model = User
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            # Check old password
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+            # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response = {
+                'status': 'success',
+                'code': status.HTTP_200_OK,
+                'message': 'Password updated successfully',
+                'data': []
+            }
+
+            return Response(response)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+    email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
+
+    send_mail(
+        # title:
+        "Password Reset for {title}".format(title="Some website title"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "noreply@somehost.local",
+        # to:
+        [reset_password_token.user.email]
+    )
+
+
 
 
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):

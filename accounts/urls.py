@@ -1,6 +1,5 @@
-from xml.etree.ElementInclude import include
-from django.urls import path,  re_path
-from .views import ChangeDeviceStatusAPIView, CurrentUserViewSet, DeviceListView, DisconnectDeviceAPIView, ChangeDeviceLanesAPIView, LoginAPIView, UserDevicesAPIView, SendNotificationAPIView, create_users, edit_users, history_view, login_view, logout_view, notifications_view, profile,   register_user, home, update_profile, users_device_add, users_device_list, users_list, password_reset_request,ResetPasswordView
+from django.urls import path,  re_path, include
+from .views import ChangeDeviceStatusAPIView, ChangePasswordView, CurrentUserViewSet, DeviceListView, DisconnectDeviceAPIView, ChangeDeviceLanesAPIView, LoginAPIView, UserDevicesAPIView, SendNotificationAPIView, create_users, edit_users, history_view, login_view, logout_view, notifications_view, profile,   register_user, home, update_profile, users_device_add, users_device_list, users_list, password_reset_request,ResetPasswordView
 from django.contrib.auth.views import LogoutView
 from rest_framework_simplejwt import views as jwt_views
 from django.contrib.auth import views as auth_views
@@ -28,6 +27,10 @@ urlpatterns = [
     path('device/disconnection', DisconnectDeviceAPIView.as_view(), name="disconnect device" ),
     path('device/change-state',ChangeDeviceStatusAPIView.as_view(), name="change device state" ),
     path('device/lane',ChangeDeviceLanesAPIView.as_view(), name='change device lane' ),
+    #change password
+    path('api/change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    # path('api/password-reset/', auth_views.PasswordResetView.as_view(template_name='accounts/password/password_reset.html'), name='password_reset'),
 
     #notifications
     path('user/notifications', SendNotificationAPIView.as_view(), name='user notifications'),
