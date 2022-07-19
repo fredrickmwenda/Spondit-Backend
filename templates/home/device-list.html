@@ -82,7 +82,7 @@
                                         </div>      
                                         </div>
                                     </td>
-                                    <td>
+                                    <td height="100px">
                                         {{item.lane2_name}}
                                         |{{ item.lane_2 }}
                                         <div class="toogle-switch toogle-switch-success">
@@ -301,39 +301,23 @@
                                                    
                                                                                                   <!--Check if user_devices queryset exists-->
                                                 <div class="col-md-6">
-                                                    <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect"  >                 
+                                                    <form action="/device/connect/{{item.id}}/" method="POST" id="device-connect" style="margin-right: 50px" >                 
                                                         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                                         <input type="hidden" name="_method" value="PUT"> 
-
-
-                                                        <input type="submit" class="btn btn-sm btn-primary" value="Connected"> 
-                                                        <input type="submit" class="btn btn-sm btn-primary" value="Connect"> 
-                                                    </form>  
+                                                            <!-- if the ite-->  
+                                                        <!---->
+                                                        <input type="submit" class="btn btn-sm btn-dark" value="Connect"> 
+                                                    </form>
                                                 </div>
-                   
-   
-                                     
-                       
-                                         
-
-
-                                                    
-                                                    <!--check if device name id is null-->
-                                                    
-
-                                                    
-                                                     
-                            
-
-  
-
-
-
-                                                
-
-                   
-
-
+                                                <div class="col-md-6"> 
+                                                    <form action="/device/disconnect/{{item.id}}/" method="POST" id="device-connect">                                           
+                                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            
+                                                        <input type="hidden" name="_method" value="PUT">
+                                                        
+                                                        <input type="submit" class="btn btn-sm btn-dark" value="Disconnect">        
+                                                    </form>
+                                                </div>
                                             </div>
                                         {% endif %}
                                     </td>
@@ -593,6 +577,52 @@
                     }
                 });
                 //store the value in the data array
+                //check if enable_5 is available and not undefined
+                if(typeof enable_5 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec5"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_5'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_6 !== 'undefined') {
+                    $.each($(".toggle-switch-chec6"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_6'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_7 !== 'undefined') {
+                    $.each($(".toggle-switch-chec7"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_7'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_8 !== 'undefined') {
+                    $.each($(".toggle-switch-chec8"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_8'] = false;
+                        }
+                    });
+                }
+
                 
                             
            }
@@ -602,6 +632,22 @@
                checkData['enable_2'] = false
                checkData['enable_3'] = false
                checkData['enable_4'] = false
+               //check if enable_5 is available and not undefined
+                if(typeof enable_5 !== 'undefined')
+                {
+                    checkData['enable_5'] = false;
+                }
+                if (typeof enable_6 !== 'undefined') {
+                    checkData['enable_6'] = false;
+                }
+                if (typeof enable_7 !== 'undefined') {
+                    checkData['enable_7'] = false;
+                }
+                if (typeof enable_8 !== 'undefined') {
+                    checkData['enable_8'] = false;
+                }
+
+
            }
 
         }
@@ -643,6 +689,54 @@
                     }
                 });
                 //store the value in the data array
+
+                               //store the value in the data array
+                //check if enable_5 is available and not undefined
+                if(typeof enable_5 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec5"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_5'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_6 !== 'undefined') {
+                    $.each($(".toggle-switch-chec6"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_6'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_7 !== 'undefined') {
+                    $.each($(".toggle-switch-chec7"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_7'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_8 !== 'undefined') {
+                    $.each($(".toggle-switch-chec8"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_8'] = false;
+                        }
+                    });
+                }
+
                 
                             
            }
@@ -652,6 +746,20 @@
                 checkData['enable_2'] = false
                 checkData['enable_3'] = false
                 checkData['enable_4'] = false
+                //check if enable_5 is available and not undefined
+                if(typeof enable_5 !== 'undefined')
+                {
+                    checkData['enable_5'] = false;
+                }
+                if (typeof enable_6 !== 'undefined') {
+                    checkData['enable_6'] = false;
+                }
+                if (typeof enable_7 !== 'undefined') {
+                    checkData['enable_7'] = false;
+                }
+                if (typeof enable_8 !== 'undefined') {
+                    checkData['enable_8'] = false;
+                }
            }
 
         }
@@ -691,6 +799,55 @@
                 });
                 //store the value in the data array
                 checkData['enable_3'] = true;
+
+               //store the value in the data array
+                //check if enable_5 is available and not undefined
+                if(typeof enable_5 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec5"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_5'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_6 !== 'undefined') {
+                    $.each($(".toggle-switch-chec6"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_6'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_7 !== 'undefined') {
+                    $.each($(".toggle-switch-chec7"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_7'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_8 !== 'undefined') {
+                    $.each($(".toggle-switch-chec8"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_8'] = false;
+                        }
+                    });
+                }
+
+
             }
             else
             {
@@ -698,6 +855,21 @@
                 checkData['enable_2'] = false
                 checkData['enable_3'] = false
                 checkData['enable_4'] = false
+
+                //check if enable_5 is available and not undefined
+                if(typeof enable_5 !== 'undefined')
+                {
+                    checkData['enable_5'] = false;
+                }
+                if (typeof enable_6 !== 'undefined') {
+                    checkData['enable_6'] = false;
+                }
+                if (typeof enable_7 !== 'undefined') {
+                    checkData['enable_7'] = false;
+                }
+                if (typeof enable_8 !== 'undefined') {
+                    checkData['enable_8'] = false;
+                }
             }
         }
         else if (type == 'enable_4')
@@ -734,6 +906,54 @@
                 });
                 //store the value in the data array
                 checkData['enable_4'] = true;
+
+                               //store the value in the data array
+                //check if enable_5 is available and not undefined
+                if(typeof enable_5 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec5"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_5'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_6 !== 'undefined') {
+                    $.each($(".toggle-switch-chec6"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_6'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_7 !== 'undefined') {
+                    $.each($(".toggle-switch-chec7"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_7'] = false;
+                        }
+                    });
+                }
+
+                if (typeof enable_8 !== 'undefined') {
+                    $.each($(".toggle-switch-chec8"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_8'] = false;
+                        }
+                    });
+                }
+
             }
             else
             {
@@ -741,6 +961,20 @@
                 checkData['enable_2'] = false
                 checkData['enable_3'] = false
                 checkData['enable_4'] = false
+                //check if enable_5 is available and not undefined  
+                if(typeof enable_5 !== 'undefined')
+                {
+                    checkData['enable_5'] = false;
+                }
+                if (typeof enable_6 !== 'undefined') {
+                    checkData['enable_6'] = false;
+                }
+                if (typeof enable_7 !== 'undefined') {
+                    checkData['enable_7'] = false;
+                }
+                if (typeof enable_8 !== 'undefined') {
+                    checkData['enable_8'] = false;
+                }
             }
         }
 
@@ -788,43 +1022,49 @@
                     }
                 });
 
-                $.each($(".toggle-switch-chec6"), function(index, value) {
-                    if($(value).data('id') == id)
-                    {
-                        $(value).prop('checked', false);
-                        //subsscribe to the topic
-                        //store the value in the data array
-                        checkData['enable_6'] = false;
-                        
-                    }
-                });
-
-
-                $.each($(".toggle-switch-chec7"), function(index, value) {
-                    if($(value).data('id') == id)
-                    {
-                        $(value).prop('checked', false);
-                        //subsscribe to the topic
-                        //store the value in the data array
-                        checkData['enable_7'] = false;
-                        
-                    }
-                });
-
-                $.each($(".toggle-switch-chec8"), function(index, value) {
-                    if($(value).data('id') == id)
-                    {
-                        $(value).prop('checked', false);
-                        //subsscribe to the topic
-                        //store the value in the data array
-                        checkData['enable_8'] = false;
-                        
-                    }
-                });
-
 
                 //store the value in the data array
                 checkData['enable_5'] = true;
+
+
+                //check if enable_6 is available and not undefined
+                if(typeof enable_6 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec6"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_6'] = false;
+                        }
+                    });
+                }
+                //check if enable_7 is available and not undefined
+                if(typeof enable_7 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec7"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_7'] = false;
+                        }
+                    });
+                }
+                //check if enable_8 is available and not undefined
+                if(typeof enable_8 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec8"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_8'] = false;
+                        }
+                    });
+                }
+
+
             }
             else
             {
@@ -833,9 +1073,21 @@
                 checkData['enable_3'] = false
                 checkData['enable_4'] = false
                 checkData['enable_5'] = false
-                checkData['enable_6'] = false
-                checkData['enable_7'] = false
-                checkData['enable_8'] = false
+                //check if enable_6 is available and not undefined
+                if(typeof enable_6 !== 'undefined')
+                {
+                    checkData['enable_6'] = false;
+                }
+                //check if enable_7 is available and not undefined
+                if(typeof enable_7 !== 'undefined')
+                {
+                    checkData['enable_7'] = false;
+                }
+                //check if enable_8 is available and not undefined
+                if(typeof enable_8 !== 'undefined')
+                {
+                    checkData['enable_8'] = false;
+                }
 
 
 
@@ -909,31 +1161,33 @@
                     }
                 });
 
-                $.each($(".toggle-switch-chec7"), function(index, value) {
-                    if($(value).data('id') == id)
-                    {
-                        $(value).prop('checked', false);
-                        //subsscribe to the topic
-                        //store the value in the data array
-                        checkData['enable_7'] = false;
-                        
-                    }
-                });
-
-                $.each($(".toggle-switch-chec8"), function(index, value) {
-                    if($(value).data('id') == id)
-                    {
-                        $(value).prop('checked', false);
-                        //subsscribe to the topic
-                        //store the value in the data array
-                        checkData['enable_8'] = false;
-                        
-                    }
-                });
-
-
                 //store the value in the data array
                 checkData['enable_6'] = true;
+
+                //check if enable_7 is available and not undefined
+                if(typeof enable_7 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec7"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_7'] = false;
+                        }
+                    });
+                }
+                //check if enable_8 is available and not undefined
+                if(typeof enable_8 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec8"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_8'] = false;
+                        }
+                    });
+                }
             }
             else
             {
@@ -943,8 +1197,16 @@
                 checkData['enable_4'] = false
                 checkData['enable_5'] = false
                 checkData['enable_6'] = false
-                checkData['enable_7'] = false
-                checkData['enable_8'] = false
+                //check if enable_7 is available and not undefined
+                if(typeof enable_7 !== 'undefined')
+                {
+                    checkData['enable_7'] = false;
+                }
+                //check if enable_8 is available and not undefined
+                if(typeof enable_8 !== 'undefined')
+                {
+                    checkData['enable_8'] = false;
+                }
 
             }
         }
@@ -1026,21 +1288,20 @@
                         
                     }
                 });
-
-                $.each($(".toggle-switch-chec8"), function(index, value) {
-                    if($(value).data('id') == id)
-                    {
-                        $(value).prop('checked', false);
-                        //subsscribe to the topic
-                        //store the value in the data array
-                        checkData['enable_8'] = false;
-                        
-                    }
-                });
-
-
                 //store the value in the data array
                 checkData['enable_7'] = true;
+                //check if enable_8 is available and not undefined
+                if(typeof enable_8 !== 'undefined')
+                {
+                    $.each($(".toggle-switch-chec8"), function(index, value) {
+                        if($(value).data('id') == id)
+                        {
+                            $(value).prop('checked', false);
+                            //store the value in the data array
+                            checkData['enable_8'] = false;
+                        }
+                    });
+                }
             }
             else
             {
@@ -1051,7 +1312,11 @@
                 checkData['enable_5'] = false
                 checkData['enable_6'] = false
                 checkData['enable_7'] = false
-                checkData['enable_8'] = false
+                //check if enable_8 is available and not undefined
+                if(typeof enable_8 !== 'undefined')
+                {
+                    checkData['enable_8'] = false;
+                }
 
             }
         }

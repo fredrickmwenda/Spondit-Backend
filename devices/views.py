@@ -528,18 +528,40 @@ def enableState(request, id):
     
         #get the json
         #get enable_1, enable_2, enable_3, enable_4 data from the json
-        enable_1 =  json.loads(request.POST.get('checkData[enable_1]'))
-        enable_2  = json.loads(request.POST.get('checkData[enable_2]'))
-        enable_3  = json.loads(request.POST.get('checkData[enable_3]'))
-        enable_4  = json.loads(request.POST.get('checkData[enable_4]'))
+        lane_1 =  json.loads(request.POST.get('checkData[enable_1]'))
+        lane_2  = json.loads(request.POST.get('checkData[enable_2]'))
+        lane_3  = json.loads(request.POST.get('checkData[enable_3]'))
+        lane_4  = json.loads(request.POST.get('checkData[enable_4]'))
 
-        print(enable_1, enable_2, enable_3, enable_4)
+        #check if  the json has enable_5
+        if request.POST.get('checkData[enable_5]') is not None:
+            lane_5 = json.loads(request.POST.get('checkData[enable_5]'))
+        else:
+            #do nothing if the json doesn't have enable_5
+            lane_5 = None
+
+        #check if  the json has enable_6
+        if request.POST.get('checkData[enable_6]') is not None:
+            lane_6 = json.loads(request.POST.get('checkData[enable_6]'))
+
+        #check if  the json has enable_7
+        if request.POST.get('checkData[enable_7]') is not None:
+            lane_7 = json.loads(request.POST.get('checkData[enable_7]'))
+
+        #check if  the json has enable_8
+        if request.POST.get('checkData[enable_8]') is not None:
+            lane_8 = json.loads(request.POST.get('checkData[enable_8]'))
+
+
+
+        
 
         #update the enable_1, enable_2, enable_3 and enable_4 in the database
-        Device.objects.filter(id=id).update(enable_1=enable_1, enable_2=enable_2, enable_3=enable_3, enable_4=enable_4)
+        Device.objects.filter(id=id).update(enable_1=lane_1, enable_2=lane_2, enable_3=lane_3, enable_4=lane_4, enable_5=lane_5, enable_6=lane_6, enable_7=lane_7, enable_8=lane_8)
+        # Device.objects.filter(id=id).update(enable_1=enable_1, enable_2=enable_2, enable_3=enable_3, enable_4=enable_4)
 
        #check if enable_1 value is true
-        if enable_1:
+        if lane_1:
             #if enable_1 is true, send a message to the mqtt broker
             #send the message to the mqtt broker
             channel_layer = get_channel_layer()
@@ -547,10 +569,12 @@ def enableState(request, id):
                 'receive',
                 {
                     'type': 'mqtt_message',
-                    'message': '{"device_id":'+ str(id) +', "enable_1":'+ str(enable_1) +'}'
+                    #send message that devicename/lane_1/on
+                    'message': '{}/{}/on'.format(device.name, 'lane_1')
+                    # 'message': '{"device_id":'+ str(id) +', "enable_1":'+ str(enable_1) +'}'
                 }
             )
-        elif enable_2:
+        elif lane_2:
             #if enable_2 is true, send a message to the mqtt broker
             #send the message to the mqtt broker
             channel_layer = get_channel_layer()
@@ -558,10 +582,11 @@ def enableState(request, id):
                 'receive',
                 {
                     'type': 'mqtt_message',
-                    'message': '{"device_id":'+ str(id) +', "enable_2":'+ str(enable_2) +'}'
+                    #send message that devicename/lane_2/on
+                    'message': '{}/{}/on'.format(device.name, 'lane_2')
                 }
             )
-        elif enable_3:
+        elif lane_3:
             #if enable_3 is true, send a message to the mqtt broker
             #send the message to the mqtt broker
             channel_layer = get_channel_layer()
@@ -569,11 +594,13 @@ def enableState(request, id):
                 'receive',
                 {
                     'type': 'mqtt_message',
-                    'message': '{"device_id":'+ str(id) +', "enable_3":'+ str(enable_3) +'}'
+                    #send message that devicename/lane_3/on
+                    'message': '{}/{}/on'.format(device.name, 'lane_3')
+                    
                 }
             )
 
-        elif enable_4:
+        elif lane_4:
             #if enable_4 is true, send a message to the mqtt broker
             #send the message to the mqtt broker
             channel_layer = get_channel_layer()
@@ -581,9 +608,60 @@ def enableState(request, id):
                 'receive',
                 {
                     'type': 'mqtt_message',
-                    'message': '{"device_id":'+ str(id) +', "enable_4":'+ str(enable_4) +'}'
+                    #send message that devicename/lane_4/on
+                    'message': '{}/{}/on'.format(device.name, 'lane_4')
                 }
             )
+        elif lane_5:
+            #if enable_5 is true, send a message to the mqtt broker
+            #send the message to the mqtt broker
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                'receive',
+                {
+                    'type': 'mqtt_message',
+                    #send message that devicename/lane_5/on
+                    'message': '{}/{}/on'.format(device.name, 'lane_5')
+                }
+            )
+        elif lane_6:
+            #if enable_6 is true, send a message to the mqtt broker
+            #send the message to the mqtt broker
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                'receive',
+                {
+                    'type': 'mqtt_message',
+                    #send message that devicename/lane_6/on
+                    'message': '{}/{}/on'.format(device.name, 'lane_6')
+                }
+            )
+        elif lane_7:
+            #if enable_7 is true, send a message to the mqtt broker
+            #send the message to the mqtt broker
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                'receive',
+                {
+                    'type': 'mqtt_message',
+                    #send message that devicename/lane_7/on
+                    'message': '{}/{}/on'.format(device.name, 'lane_7')
+                }
+            )
+        elif lane_8:
+            #if enable_8 is true, send a message to the mqtt broker
+            #send the message to the mqtt broker
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                'receive',
+                {
+                    'type': 'mqtt_message',
+                    #send message that devicename/lane_8/on
+                    'message': '{}/{}/on'.format(device.name, 'lane_8')
+                }
+            )
+
+
 
 
   
