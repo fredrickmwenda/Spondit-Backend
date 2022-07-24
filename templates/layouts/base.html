@@ -12,7 +12,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
-
+    {% load static %}
     <link rel="icon" href="/static/assets/favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" type="image/x-icon" href="/static/assets/favicon.ico" />
     
@@ -31,12 +31,12 @@
       });
     </script>
 
-    <!-- Dashboard Core -->
-    <link href="/static/assets/css/dashboard.css" rel="stylesheet" />
-    <script src="/static/assets/js/dashboard.js"></script>
+    <!-- Dashboard Core {% static 'assets/plugins/charts-c3/plugin.js' %}"-->
+    <link href="{% static 'assets/css/dashboard.css' %}" rel="stylesheet" />
+    <script src="{% static 'assets/js/dashboard.js' %}"></script>
     <!-- c3.js Charts Plugin -->
-    <link href="/static/assets/plugins/charts-c3/plugin.css" rel="stylesheet" />
-    <script src="/static/assets/plugins/charts-c3/plugin.js"></script>
+    <link href="{% static 'assets/plugins/charts-c3/plugin.css' %}" rel="stylesheet" />
+    <script src="{% static 'assets/plugins/charts-c3/plugin.js' %}"></script>
     <!-- Google Maps Plugin -->
     <link href="/static/assets/plugins/maps-google/plugin.css" rel="stylesheet" />
     <script src="/static/assets/plugins/maps-google/plugin.js"></script>
@@ -83,34 +83,6 @@
 
     </div>
 
-    {{ room_name|json_script:"room-name" }}
-    <script>
-        // const roomName = JSON.parse(document.getElementById('room-name').textContent);
-
-        // const notificationSocket = new WebSocket(
-        //     'ws://'
-        //     + window.location.host
-        //     + '/ws/notification/'
-        //     + roomName
-        //     + '/'
-        // );
-
-        // notificationSocket.onmessage = function(e) {
-        //     const data = JSON.parse(e.data);
-        //     //document.querySelector('#chat-log').value += (data.message + '\n');
-        //     console.log(data);
-        //     // document.getElementById("notifications-dropdown").innerHTML = "<li class='dropdown-item'>" + data + "</li><hr class='dropdown-divider'>" + document.getElementById("notifications-dropdown").innerHTML;
-        //     document.getElementById("notification-badge").innerHTML = parseInt(document.getElementById("notification-badge").innerHTML) + 1;
-        // };
-
-        // notificationSocket.onclose = function(e) {
-        //     console.error('Chat socket closed unexpectedly');
-        // };
-
-      
-
-       
-    </script>
 
   <!-- Specific Page JS goes HERE  -->
   {% block javascripts %}{% endblock javascripts %}
