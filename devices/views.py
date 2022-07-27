@@ -701,8 +701,12 @@ def changeLane(request,id):
             lane_2 = form.cleaned_data['lane_2']
             lane_3 = form.cleaned_data['lane_3']
             lane_4 = form.cleaned_data['lane_4']
+            lane_5 = form.cleaned_data['lane_5']
+            lane_6 = form.cleaned_data['lane_6']
+            lane_7 = form.cleaned_data['lane_7']
+            lane_8 = form.cleaned_data['lane_8']
             #update the lane data in the database
-            Device.objects.filter(id=id).update(lane_1=lane_1, lane_2=lane_2, lane_3=lane_3, lane_4=lane_4)
+            Device.objects.filter(id=id).update(lane_1=lane_1, lane_2=lane_2, lane_3=lane_3, lane_4=lane_4, lane_5=lane_5, lane_6=lane_6, lane_7=lane_7, lane_8=lane_8)
             #create a log for the device lane changed
             LogEntry.objects.log_action(
                 user_id=request.user.pk,
